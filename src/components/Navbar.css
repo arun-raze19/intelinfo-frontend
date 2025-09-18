@@ -1,0 +1,207 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1rem 0;
+  transition: all var(--transition-normal);
+  --navbar-height: 64px;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-logo {
+  text-decoration: none;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-logo h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+/* removed logo box */
+
+/* removed logo image styles */
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.4rem;
+  position: relative;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 24px var(--glass-shadow);
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  transition: color var(--transition-normal);
+  position: relative;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--text-primary);
+}
+
+/* Sliding indicator inspired by CodePen */
+.nav-indicator {
+  position: absolute;
+  top: 4px;
+  left: var(--indicator-left, 4px);
+  height: calc(100% - 8px);
+  width: var(--indicator-width, 120px);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 8px 24px var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.25);
+  transition: left var(--transition-normal), width var(--transition-normal);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.nav-menu {
+  --pill-gap: 0.5rem;
+}
+
+.nav-menu .nav-item {
+  position: relative;
+  z-index: 1;
+}
+
+/* dynamic pill positioning */
+.nav-menu {
+  counter-reset: idx;
+}
+
+.nav-menu .nav-item:nth-child(1) { --i: 0; }
+.nav-menu .nav-item:nth-child(2) { --i: 1; }
+.nav-menu .nav-item:nth-child(3) { --i: 2; }
+.nav-menu .nav-item:nth-child(4) { --i: 3; }
+
+.nav-menu .nav-item {
+  --w: 0;
+}
+
+/* compute widths so pill fits link content */
+.nav-menu .nav-item .nav-link {
+  display: inline-block;
+}
+
+/* Using JS-provided --active-index to move the pill */
+.nav-menu {
+  --active-index: 0;
+}
+
+.nav-menu .nav-item:nth-child(1) .nav-link { --w: 105px; }
+.nav-menu .nav-item:nth-child(2) .nav-link { --w: 150px; }
+.nav-menu .nav-item:nth-child(3) .nav-link { --w: 135px; }
+.nav-menu .nav-item:nth-child(4) .nav-link { --w: 160px; }
+
+/* indicator position handled by inline CSS variables from JS */
+
+.hamburger {
+  display: none;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: all var(--transition-normal);
+}
+
+.hamburger:hover {
+  transform: scale(1.1);
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .hamburger { display: none; }
+
+  /* Always-visible nav: wraps to multiple rows on small screens */
+  .nav-menu {
+    position: static;
+    width: 100%;
+    transform: none;
+    flex-direction: row;
+    flex-wrap: nowrap; /* keep in a single line */
+    justify-content: flex-start;
+    gap: 0.4rem;
+    padding: 0.5rem;
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+    z-index: 1;
+    max-height: none;
+    overflow-x: auto; /* allow horizontal scroll if needed */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none; /* Firefox */
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    display: flex;
+    mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+  }
+  .nav-menu::-webkit-scrollbar { display: none; }
+
+  .nav-menu.active { display: flex; }
+
+  .nav-indicator { display: none; }
+
+  .nav-item { width: auto; flex: 0 0 auto; }
+
+  .nav-link {
+    display: block;
+    width: auto;
+    text-align: center;
+    padding: 0.55rem 0.8rem;
+    font-size: clamp(12px, 2.8vw, 14px);
+    border-radius: 999px;
+    color: var(--text-primary);
+    background: transparent;
+    border: none;
+    white-space: nowrap; /* prevent wrapping of labels */
+  }
+
+  .nav-container {
+    padding: 0 1rem;
+  }
+
+  /* cleanup removed logo styles */
+}
+
+@media (max-width: 480px) {
+  .nav-container { padding: 0 0.75rem; }
+  .nav-menu { padding: 0.4rem; gap: 0.25rem; }
+  .nav-link { padding: 0.45rem 0.7rem; font-size: clamp(11px, 3.2vw, 13px); }
+}
