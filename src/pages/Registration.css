@@ -34,6 +34,48 @@
   padding: 3rem 0;
 }
 
+/* Google Form Embed */
+.google-form-embed {
+  padding: 0;
+}
+
+.responsive-iframe-wrapper {
+  position: relative;
+  width: 100%;
+  /* 16:9 ratio default; Google Form is tall, so allow taller min height on mobile */
+  padding-top: 0;
+  height: 80vh;
+}
+
+.responsive-iframe-wrapper iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
+  border-radius: var(--radius-lg);
+}
+
+.form-note {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  padding: 1rem 0;
+}
+
+.external-link {
+  color: var(--accent-500);
+  text-decoration: underline;
+}
+
+.payment-note {
+  margin-top: 1rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
 .register-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -61,16 +103,17 @@
   content: '';
   position: absolute;
   top: 0;
-  left: -100%;
+  left: 0;
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   animation: shimmer 3s infinite;
+  will-change: transform;
 }
 
 @keyframes shimmer {
-  0% { left: -100%; }
-  100% { left: 100%; }
+  0% { transform: translate3d(-100%, 0, 0); }
+  100% { transform: translate3d(100%, 0, 0); }
 }
 
 .urgency-icon {
@@ -157,11 +200,13 @@
 }
 
 .pricing-card:hover {
-  transform: translateY(-4px);
+  transform: translate3d(0, -4px, 0);
+  will-change: transform;
 }
 
 .pricing-card.featured:hover {
-  transform: scale(1.05) translateY(-4px);
+  transform: scale(1.05) translate3d(0, -4px, 0);
+  will-change: transform;
 }
 
 .pricing-badge {
@@ -490,6 +535,8 @@
     grid-template-columns: 1fr;
     gap: 2rem;
   }
+
+  .responsive-iframe-wrapper { height: 85vh; }
   
   .register-info {
     gap: 1.5rem;
@@ -556,6 +603,8 @@
   .register-content {
     padding: 2rem 0;
   }
+
+  .responsive-iframe-wrapper { height: 90vh; }
   
   .urgency-banner {
     padding: 1rem;
@@ -609,4 +658,54 @@
     padding: 1rem 1.5rem;
     font-size: 1rem;
   }
+}
+
+/* ===== QR PAYMENT SECTION ===== */
+.qr-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.qr-card {
+  padding: 1rem 1rem 1.25rem 1rem;
+  text-align: center;
+}
+
+.qr-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.qr-image {
+  display: block;
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto 0.75rem auto;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  background: #fff;
+}
+
+.qr-download {
+  display: inline-block;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  color: white;
+  background: var(--accent-gradient);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+}
+
+.qr-download:hover { opacity: 0.95; }
+
+@media (max-width: 768px) {
+  .qr-image { max-width: 320px; }
+}
+
+@media (max-width: 480px) {
+  .qr-image { max-width: 280px; }
 }

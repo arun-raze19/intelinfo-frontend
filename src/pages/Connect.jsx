@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { Mail, Phone, MapPin, Send, Twitter, Linkedin, Instagram, Facebook, MessageCircle, Clock, Users, Award } from 'lucide-react'
 import './Connect.css'
 
@@ -10,15 +10,15 @@ const Connect = () => {
     message: ''
   })
 
-  const handleInputChange = (e) => {
+  const handleInputChange = useCallback((e) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: value
     }))
-  }
+  }, [])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault()
     // Handle form submission here
     console.log('Contact form submitted:', formData)
@@ -29,9 +29,9 @@ const Connect = () => {
       subject: '',
       message: ''
     })
-  }
+  }, [formData])
 
-  const contactInfo = [
+  const contactInfo = useMemo(() => [
     {
       icon: <Mail className="contact-icon" />,
       title: "Email",
@@ -51,20 +51,20 @@ const Connect = () => {
       address: "123 Innovation Drive\nSilicon Valley, CA 94000",
       description: "Visit us at our main venue"
     }
-  ]
+  ], [])
 
-  const socialLinks = [
+  const socialLinks = useMemo(() => [
     { icon: <Twitter className="social-icon" />, name: "Twitter", url: "#", color: "#1DA1F2" },
     { icon: <Linkedin className="social-icon" />, name: "LinkedIn", url: "#", color: "#0077B5" },
     { icon: <Instagram className="social-icon" />, name: "Instagram", url: "#", color: "#E4405F" },
     { icon: <Facebook className="social-icon" />, name: "Facebook", url: "#", color: "#1877F2" }
-  ]
+  ], [])
 
-  const teamStats = [
+  const teamStats = useMemo(() => [
     { icon: <Users className="stat-icon" />, value: "50+", label: "Team Members" },
     { icon: <Award className="stat-icon" />, value: "5+", label: "Years Experience" },
     { icon: <MessageCircle className="stat-icon" />, value: "24h", label: "Response Time" }
-  ]
+  ], [])
 
   return (
     <div className="connect">

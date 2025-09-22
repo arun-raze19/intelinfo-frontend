@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Share+Tech+Mono&display=swap');
+
+.event-anamoly { padding-top: 80px; background:#020a05; position: relative; overflow: hidden; }
+
+.matrix-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Matrix rain background */
+.event-anamoly::before, .event-anamoly::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(#00ff88 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.1) 1px, transparent 1px);
+  background-size: 100% 24px, 24px 100%;
+  opacity: 0.06;
+  pointer-events: none;
+}
+.event-anamoly::after {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 255, 136, 0.18) 0px,
+    rgba(0, 255, 136, 0.18) 2px,
+    rgba(0, 0, 0, 0) 40px
+  );
+  animation: matrix-fall 6s linear infinite;
+  mix-blend-mode: screen;
+  opacity: 0.18;
+}
+
+@keyframes matrix-fall {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.anamoly-hero {
+  padding: 3rem 0;
+  text-align: center;
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  perspective: 1000px;
+  position: relative;
+  overflow: hidden;
+}
+
+.anamoly-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,255,136,0.12), rgba(0,0,0,0) 40%),
+    repeating-linear-gradient(90deg, rgba(0,255,136,0.06) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(0deg, rgba(0,255,136,0.06) 0 1px, transparent 1px 40px);
+  pointer-events: none;
+}
+
+.anamoly-hero .page-title {
+  background: linear-gradient(90deg, #00ff88, #00d46a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-family: 'Orbitron', system-ui, sans-serif;
+  letter-spacing: 1.2px;
+}
+.anamoly-hero .container { transform: rotateX(var(--tiltX, 0deg)) rotateY(var(--tiltY, 0deg)); transition: transform 200ms ease; transform-style: preserve-3d; }
+
+.back-link { margin-top: 0.5rem; }
+.back-link a { color: var(--accent-500); text-decoration: underline; }
+
+.event-sections { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.event-section { padding: 1.25rem 1.25rem; }
+.event-section h2 { margin: 0 0 0.75rem 0; font-size: 1.25rem; font-weight: 700; font-family: 'Orbitron', system-ui, sans-serif; letter-spacing: 0.6px; }
+.event-section ul { margin: 0; padding-left: 1.25rem; line-height: 1.6; color: var(--text-secondary); }
+
+/* Futuristic monospace for details */
+.event-section li, .terminal { font-family: 'Share Tech Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+/* Legend */
+.anamoly-intro { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1rem; }
+.legend { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.8rem; background: rgba(0, 20, 10, 0.6); border: 1px solid rgba(0,255,136,0.2); border-radius: var(--radius-sm); box-shadow: 0 8px 24px rgba(0,255,136,0.06); }
+.shape { width: 14px; height: 14px; display: inline-block; }
+.shape.circle.red { background: #ff4d4f; border-radius: 50%; }
+.shape.square.blue { background: #2fa6ff; }
+.shape.triangle.amber { width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid #ffbf47; }
+.legend-item span { font-family: 'Share Tech Mono', monospace; color: var(--text-secondary); font-size: 0.9rem; }
+
+/* Terminal card */
+.terminal { background: #02140c; color: #c8ffd9; border-radius: var(--radius-md); padding: 1rem 1rem; position: relative; box-shadow: 0 12px 40px rgba(0,0,0,0.4); border: 1px solid rgba(0,255,136,0.22); }
+.terminal .title { color: #00ff88; margin-bottom: 0.5rem; letter-spacing: 0.6px; font-family: 'Orbitron', sans-serif; }
+.terminal .line { opacity: 0.9; }
+.terminal .cursor { display: inline-block; width: 8px; height: 1em; background: #00ff88; margin-left: 4px; animation: blink 1s steps(1) infinite; vertical-align: -2px; }
+@keyframes blink { 50% { opacity: 0; } }
+
+@media (max-width: 480px) {
+  .event-anamoly { padding-top: 70px; }
+}
+
+

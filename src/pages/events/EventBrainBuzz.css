@@ -1,0 +1,93 @@
+.event-bb { padding-top: 80px; position: relative; background: #0a1b4d; color: #f3f6ff; overflow-x: hidden; }
+/* Codepen-inspired particles (JGvyra) simplified CSS-only approximation */
+.bb-animated-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; will-change: transform, opacity; }
+.bb-animated-bg::before, .bb-animated-bg::after {
+  content: '';
+  position: absolute;
+  inset: -20vh -20vw;
+  background:
+    radial-gradient(4px 4px at 20% 30%, rgba(255,255,255,0.8), transparent 50%),
+    radial-gradient(3px 3px at 60% 70%, rgba(255,215,0,0.9), transparent 50%),
+    radial-gradient(3px 3px at 80% 40%, rgba(173,216,230,0.9), transparent 50%),
+    radial-gradient(2px 2px at 35% 85%, rgba(255,255,255,0.8), transparent 50%),
+    radial-gradient(2px 2px at 75% 25%, rgba(255,215,0,0.9), transparent 50%);
+  animation: float-particles 36s ease-in-out infinite;
+  opacity: .28;
+  filter: blur(.3px);
+}
+.bb-animated-bg::after { animation-duration: 48s; animation-direction: reverse; opacity: .2; }
+@keyframes float-particles {
+  0% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(-2vw, -3vh, 0) scale(1.03); }
+  100% { transform: translate3d(0,0,0) scale(1); }
+}
+/* Royal blue velvet backdrop with subtle vignette */
+.event-bb::before { content:''; position: fixed; inset:0; background:
+  radial-gradient(1200px 600px at 20% 10%, rgba(255,255,255,0.06), transparent 60%),
+  radial-gradient(900px 450px at 80% 20%, rgba(255,255,255,0.05), transparent 60%),
+  radial-gradient(60% 60% at 50% 50%, rgba(0,0,0,0.35), transparent 70%);
+  pointer-events:none; }
+
+/* Marquee bulbs around page edges */
+.event-bb::after { content:''; position: fixed; inset: 12px; border: 4px solid rgba(212,175,55,0.35); border-radius: 18px; box-shadow:
+  0 0 0 4px rgba(255,215,0,0.15) inset,
+  0 0 24px rgba(255,215,0,0.25);
+  pointer-events:none; }
+
+/* Animated light rays */
+.bb-rays { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.bb-rays::before, .bb-rays::after {
+  content: '';
+  position: absolute;
+  width: 120vw; height: 120vw;
+  left: -10vw; top: -40vw;
+  background: conic-gradient(from 0deg, rgba(255,215,0,0.08), rgba(255,215,0,0) 30%);
+  filter: blur(18px);
+  animation: spin-slow 32s linear infinite;
+}
+.bb-rays::after { left: -20vw; top: -30vw; animation-duration: 40s; opacity: .6; }
+@keyframes spin-slow { to { transform: rotate(360deg) } }
+
+.bb-hero { padding: 3rem 0; text-align: center; background: linear-gradient(180deg, rgba(10,27,77,0.0), rgba(10,27,77,0.0)); position: relative; z-index: 2; }
+.bb-hero .page-title { background: linear-gradient(90deg, #f7e27a, #ffd700, #e1c16e, #ffd700, #f7e27a); background-size: 200% 100%; animation: gold-sheen 6s ease-in-out infinite; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: 0 2px 0 rgba(0,0,0,0.25); font-weight: 900; }
+@keyframes gold-sheen { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.back-link { margin-top: 0.5rem; }
+.back-link a { color: var(--accent-500); text-decoration: underline; }
+
+.bb-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.bb-card { position: relative; padding: 1.25rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,215,0,0.32); box-shadow: 0 14px 30px rgba(0,0,0,0.26), inset 0 0 0 1px rgba(255,255,255,0.05); border-radius: 12px; transition: transform 280ms ease, box-shadow 280ms ease, background 280ms ease; will-change: transform, box-shadow; }
+.bb-card:hover { transform: translateY(-2px); box-shadow: 0 18px 44px rgba(0,0,0,0.3), 0 0 16px rgba(255,215,0,0.18); background: rgba(255,255,255,0.1); }
+.bb-card h2 { margin: 0 0 0.75rem 0; font-size: 1.25rem; font-weight: 700; }
+.bb-card h3 { margin: 0.5rem 0 0.5rem 0; font-size: 1.1rem; font-weight: 800; color: #ffd966; }
+.bb-card ul, .bb-card ol { margin: 0; padding-left: 1.25rem; line-height: 1.6; color: #e8edff; }
+
+/* Gold glitter accents */
+.bb-card::after { content:''; position: absolute; pointer-events:none; inset: 0; background:
+  radial-gradient(2px 2px at 10% 20%, rgba(255,215,0,0.9), transparent 60%),
+  radial-gradient(1.5px 1.5px at 60% 40%, rgba(255,255,200,0.95), transparent 60%),
+  radial-gradient(2px 2px at 80% 70%, rgba(255,223,130,0.85), transparent 60%);
+  opacity: .25; filter: blur(.2px); }
+
+/* Shining metal header underline */
+.bb-card h2::after { content:''; display:block; height:2px; margin-top:6px; background: linear-gradient(90deg, transparent, rgba(255,215,0,0.9), transparent); box-shadow: 0 0 10px rgba(255,215,0,0.6); }
+
+/* Subtle floating confetti */
+.bb-confetti { position: fixed; inset:0; pointer-events:none; z-index: 0; }
+.bb-confetti::before { content:''; position:absolute; inset:0; background:
+  radial-gradient(2px 2px at 20% 30%, rgba(255,215,0,.8), transparent 60%),
+  radial-gradient(2px 2px at 50% 70%, rgba(135,206,250,.8), transparent 60%),
+  radial-gradient(2px 2px at 80% 40%, rgba(255,105,180,.8), transparent 60%);
+  animation: drift 28s ease-in-out infinite; opacity:.25; }
+@keyframes drift { 0%{ transform: translateY(-6%)} 100%{ transform: translateY(6%)} }
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .bb-animated-bg::before, .bb-animated-bg::after,
+  .bb-rays::before, .bb-rays::after,
+  .bb-confetti::before,
+  .bb-hero .page-title { animation: none !important; }
+}
+
+@media (max-width: 480px) { .event-bb { padding-top: 70px; } }
+
+

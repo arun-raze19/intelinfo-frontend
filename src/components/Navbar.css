@@ -87,6 +87,8 @@
   transition: left var(--transition-normal), width var(--transition-normal);
   pointer-events: none;
   z-index: 0;
+  will-change: left, width;
+  transform: translateZ(0);
 }
 
 .nav-menu {
@@ -137,7 +139,8 @@
 }
 
 .hamburger:hover {
-  transform: scale(1.1);
+  transform: scale3d(1.1, 1.1, 1);
+  will-change: transform;
 }
 
 /* Mobile Styles */
@@ -145,59 +148,17 @@
   .hamburger { display: none; }
 
   /* Always-visible nav: wraps to multiple rows on small screens */
-  .nav-menu {
-    position: static;
-    width: 100%;
-    transform: none;
-    flex-direction: row;
-    flex-wrap: nowrap; /* keep in a single line */
-    justify-content: flex-start;
-    gap: 0.4rem;
-    padding: 0.5rem;
-    opacity: 1;
-    pointer-events: auto;
-    visibility: visible;
-    z-index: 1;
-    max-height: none;
-    overflow-x: auto; /* allow horizontal scroll if needed */
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    touch-action: pan-x;
-    -ms-overflow-style: none; /* IE/Edge */
-    scrollbar-width: none; /* Firefox */
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
-    display: flex;
-    mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
-  }
-  .nav-menu::-webkit-scrollbar { display: none; }
-
-  .nav-menu.active { display: flex; }
-
-  .nav-indicator { display: none; }
-
-  .nav-item { width: auto; flex: 0 0 auto; }
-
-  .nav-link {
-    display: block;
-    width: auto;
-    text-align: center;
-    padding: 0.55rem 0.8rem;
-    font-size: clamp(12px, 2.8vw, 14px);
-    border-radius: 999px;
-    color: var(--text-primary);
-    background: transparent;
-    border: none;
-    white-space: nowrap; /* prevent wrapping of labels */
-  }
+  .nav-menu { display: none; }
 
   .nav-container {
     padding: 0 1rem;
+    justify-content: center; /* center the title */
   }
 
-  /* cleanup removed logo styles */
+  .nav-logo h2 {
+    font-size: clamp(1.4rem, 5.5vw, 2rem);
+    text-align: center;
+  }
 }
 
 @media (max-width: 480px) {

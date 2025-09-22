@@ -1,0 +1,117 @@
+@font-face {
+  font-family: 'Dirtylane';
+  src: url('../../assets/Dirtylane.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+.event-pitch { padding-top: 80px; position: relative; background: linear-gradient(135deg, #FFECC0, #FFC29B 35%, #F39F9F 70%, #B95E82); color: #000; overflow: hidden; font-family: 'Dirtylane', 'Phatt', system-ui, sans-serif; }
+.pitch-hero { padding: 3rem 0; text-align: center; background: rgba(255,255,255,0.02); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.pitch-hero .page-title {
+  font-family: 'Dirtylane', 'Phatt', system-ui, sans-serif;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #000;
+  /* 3D neon text effect */
+  text-shadow:
+    0 1px 0 #000,
+    0 2px 0 rgba(0,0,0,0.8),
+    0 3px 0 rgba(0,0,0,0.7),
+    0 0 8px rgba(185, 94, 130, 0.6),
+    0 0 16px rgba(243, 159, 159, 0.5),
+    0 0 24px rgba(255, 194, 155, 0.45);
+  animation: neon-breathe 6s ease-in-out infinite;
+}
+.pitch-hero .page-title:hover { transform: translateY(-2px); transition: transform 220ms ease; }
+.pitch-hero .page-subtitle { color: #000; text-shadow: 0 0 8px rgba(243,159,159,0.25); }
+.back-link { margin-top: 0.5rem; }
+.back-link a { color: #000; text-decoration: underline; }
+
+.pitch-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.pitch-card {
+  padding: 1.25rem;
+  background: #FFECC0;
+  border: 2px solid #B95E82;
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.14), 0 0 14px rgba(185,94,130,0.28);
+  color: #000;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 260ms ease, box-shadow 260ms ease;
+  animation: card-pulse 8s ease-in-out infinite;
+}
+.pitch-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #B95E82, #F39F9F, #FFC29B, #FFECC0);
+  filter: blur(10px);
+  opacity: .35;
+  z-index: -1;
+}
+.pitch-card:hover { transform: translateY(-3px) rotateX(1.5deg); box-shadow: 0 16px 36px rgba(0,0,0,0.18), 0 0 18px rgba(185,94,130,0.35); }
+.pitch-card h2 { margin: 0 0 0.75rem 0; font-size: 1.25rem; font-weight: 700; }
+.pitch-card h2 {
+  text-shadow:
+    0 1px 0 #000,
+    0 0 10px rgba(185,94,130,0.35),
+    0 0 16px rgba(243,159,159,0.28);
+}
+.pitch-card ul, .pitch-card ol { margin: 0; padding-left: 1.25rem; line-height: 1.6; color: #000; }
+.pitch-card li { text-shadow: 0 0 6px rgba(255,236,192,0.35); }
+
+/* Force all text on this page to black for readability on palette */
+.event-pitch *, .event-pitch *::before, .event-pitch *::after { color: #000 !important; }
+
+/* Neon frame around the viewport */
+.event-pitch::after {
+  content: '';
+  position: fixed;
+  inset: 12px;
+  border-radius: 18px;
+  box-shadow: 0 0 0 3px rgba(185,94,130,0.28), 0 0 24px rgba(243,159,159,0.34) inset;
+  pointer-events: none;
+  animation: frame-pulse 10s ease-in-out infinite;
+}
+
+/* Reduce motion support */
+@media (prefers-reduced-motion: reduce) {
+  .pitch-card, .pitch-hero .page-title { transition: none !important; animation: none !important; }
+}
+
+/* Neon breathing and pulse animations */
+@keyframes neon-breathe {
+  0%, 100% { text-shadow:
+    0 1px 0 #000,
+    0 2px 0 rgba(0,0,0,0.8),
+    0 3px 0 rgba(0,0,0,0.7),
+    0 0 8px rgba(185, 94, 130, 0.55),
+    0 0 16px rgba(243, 159, 159, 0.45),
+    0 0 24px rgba(255, 194, 155, 0.4); }
+  50% { text-shadow:
+    0 1px 0 #000,
+    0 2px 0 rgba(0,0,0,0.8),
+    0 3px 0 rgba(0,0,0,0.7),
+    0 0 10px rgba(185, 94, 130, 0.75),
+    0 0 22px rgba(243, 159, 159, 0.65),
+    0 0 32px rgba(255, 194, 155, 0.6); }
+}
+
+@keyframes card-pulse {
+  0%, 100% { box-shadow: 0 10px 28px rgba(0,0,0,0.14), 0 0 12px rgba(185,94,130,0.22); }
+  50% { box-shadow: 0 12px 32px rgba(0,0,0,0.16), 0 0 22px rgba(185,94,130,0.36); }
+}
+
+@keyframes frame-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(185,94,130,0.26), 0 0 22px rgba(243,159,159,0.32) inset; }
+  50% { box-shadow: 0 0 0 3px rgba(185,94,130,0.36), 0 0 34px rgba(243,159,159,0.46) inset; }
+}
+
+@media (max-width: 480px) { .event-pitch { padding-top: 70px; } }
+
+/* Ensure legacy tank visuals are hidden for this colorway */
+.pitch-water, .pitch-tank, .shark { display: none !important; }
+
+
+

@@ -12,7 +12,8 @@ const Navbar = () => {
     { path: '/', label: 'Home' },
     { path: '/events', label: 'Event Details' },
     { path: '/registration', label: 'Registration' },
-    { path: '/connect', label: 'Connect With Us' }
+    { path: '/connect', label: 'Connect With Us' },
+    { path: '/announcements', label: 'Announcements' }
   ]), [])
 
   const activeIndex = useMemo(() => {
@@ -28,11 +29,17 @@ const Navbar = () => {
 
   useEffect(() => {
     if (!menuRef.current || !linkRefs.current[currentIndex]) return
-    const menuRect = menuRef.current.getBoundingClientRect()
-    const linkRect = linkRefs.current[currentIndex].getBoundingClientRect()
-    const left = Math.max(4, linkRect.left - menuRect.left)
-    const width = linkRect.width
-    setIndicatorStyle({ left, width })
+    
+    const updateIndicator = () => {
+      const menuRect = menuRef.current.getBoundingClientRect()
+      const linkRect = linkRefs.current[currentIndex].getBoundingClientRect()
+      const left = Math.max(4, linkRect.left - menuRect.left)
+      const width = linkRect.width
+      setIndicatorStyle({ left, width })
+    }
+    
+    // Use requestAnimationFrame for smooth updates
+    requestAnimationFrame(updateIndicator)
   }, [currentIndex, location.pathname])
 
   return (

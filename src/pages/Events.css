@@ -39,6 +39,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
   align-items: start;
+  perspective: 1000px;
 }
 
 .events-column {
@@ -50,9 +51,9 @@
 .column-header {
   text-align: center;
   padding: 2rem;
-  position: sticky;
-  top: 100px;
-  z-index: 10;
+  position: static;
+  top: auto;
+  z-index: auto;
 }
 
 .column-icon {
@@ -93,14 +94,21 @@
 
 .event-card {
   padding: 2rem;
-  transition: all var(--transition-normal);
+  transition: transform 200ms ease, box-shadow var(--transition-normal);
   border-left: 4px solid transparent;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--tiltX, 0deg)) rotateY(var(--tiltY, 0deg));
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
 .event-card:hover {
-  transform: translateY(-4px);
+  transform: rotateX(var(--tiltX, 0deg)) rotateY(var(--tiltY, 0deg)) translate3d(0, -4px, 0);
   border-left-color: var(--accent-gradient);
   box-shadow: 0 16px 48px var(--glass-shadow);
+  will-change: transform;
+  text-decoration: none;
 }
 
 .event-header {
@@ -162,6 +170,12 @@
   font-size: 0.9rem;
 }
 
+.detail-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-right: 4px;
+}
+
 .detail-icon {
   width: 1.2rem;
   height: 1.2rem;
@@ -171,6 +185,45 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   flex-shrink: 0;
+}
+
+.event-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.event-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.event-btn.primary {
+  background: var(--accent-gradient);
+  border-color: rgba(255,255,255,0.3);
+  color: white;
+}
+
+.event-btn .btn-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.event-rules-tba {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+  font-weight: 500;
 }
 
 /* Responsive Design */

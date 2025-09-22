@@ -63,7 +63,8 @@
 }
 
 .contact-card:hover {
-  transform: translateY(-4px);
+  transform: translate3d(0, -4px, 0);
+  will-change: transform;
 }
 
 .contact-icon-container {
@@ -157,9 +158,10 @@
 
 .social-link:hover {
   background: var(--glass-hover);
-  transform: translateY(-2px);
+  transform: translate3d(0, -2px, 0);
   border-color: var(--social-color);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  will-change: transform;
 }
 
 .social-icon {
@@ -200,7 +202,8 @@
 
 .stat-item:hover {
   background: var(--glass-hover);
-  transform: translateX(4px);
+  transform: translate3d(4px, 0, 0);
+  will-change: transform;
 }
 
 .stat-icon {
@@ -341,7 +344,8 @@
 }
 
 .faq-item:hover {
-  transform: translateY(-4px);
+  transform: translate3d(0, -4px, 0);
+  will-change: transform;
 }
 
 .faq-item h4 {
