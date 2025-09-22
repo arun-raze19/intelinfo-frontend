@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile.frontend
     container_name: intelinfo-frontend
     ports:
-      - "80:80"
+      - "8004:80"
     environment:
       # If your frontend needs to call an existing backend, set it here.
       # Otherwise you can remove this line or set it at runtime:
