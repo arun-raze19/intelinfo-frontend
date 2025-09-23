@@ -303,7 +303,7 @@
 .register-btn {
   background: var(--accent-gradient);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
+  color: #000000;
   box-shadow: 0 8px 32px rgba(79, 172, 254, 0.3);
 }
 
@@ -350,9 +350,9 @@
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.6);
-    border: 2px dashed rgba(255, 255, 255, 0.85);
+    color: #000000;
+    background: transparent;
+    border: 2px dashed rgba(0, 0, 0, 0.6);
     padding: 6px 12px;
     border-radius: 9px;
     transform: rotate(-6deg);
@@ -480,7 +480,7 @@
 .feature-icon {
   width: 2rem;
   height: 2rem;
-  color: white;
+  color: #000000;
 }
 
 .feature-card h3 {

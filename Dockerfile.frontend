@@ -1,14 +1,48 @@
+# Multi-stage build for optimized frontend
 FROM node:20-alpine AS builder
+
+# Set working directory
 WORKDIR /app
-COPY package*.json /app/
-RUN npm ci && npm i -D terser
-COPY . /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies with optimizations
+RUN npm ci --only=production --silent && \
+    npm i -D terser @types/node --silent
+
+# Copy source code
+COPY . .
+
+# Build the application with optimizations
 RUN npm run build
 
+# Production stage with nginx
 FROM nginx:alpine
+
+# Install wget for health checks
+RUN apk add --no-cache wget
+
+# Set working directory
 WORKDIR /usr/share/nginx/html
+
+# Copy built application
 COPY --from=builder /app/dist .
+
+# Copy nginx configuration
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+
+# Create nginx user and set permissions
+RUN chown -R nginx:nginx /usr/share/nginx/html && \
+    chmod -R 755 /usr/share/nginx/html
+
+# Expose port
 EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost:80 || exit 1
+
+# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
 

@@ -9,6 +9,8 @@ const API_BASE = (typeof window !== 'undefined') ? (
 
 const Announcements = () => {
   const [items, setItems] = useState([])
+  const [messages, setMessages] = useState([])
+  const [view, setView] = useState('ann') // 'ann' | 'inbox'
   const [wsConnected, setWsConnected] = useState(false)
   const wsRef = useRef(null)
 
@@ -30,6 +32,18 @@ const Announcements = () => {
   }, [])
 
   useEffect(() => { load() }, [load])
+
+  const loadMessages = useCallback(async (token) => {
+    if (!token) return
+    try {
+      const res = await fetch(`${API_BASE}/messages?token=${encodeURIComponent(token)}`)
+      if (!res.ok) throw new Error('Failed to load messages')
+      const data = await res.json()
+      setMessages(data)
+    } catch (e) {
+      alert('Failed to load inbox messages')
+    }
+  }, [])
 
   useEffect(() => {
     const wsScheme = API_BASE.startsWith('https') ? 'wss' : 'ws'
@@ -62,6 +76,8 @@ const Announcements = () => {
     if (res.ok) {
       const json = await res.json()
       setAdminToken(json.token)
+      // Preload messages after login
+      loadMessages(json.token)
     } else {
       alert('Invalid credentials')
     }
@@ -103,7 +119,20 @@ const Announcements = () => {
           <h1 className="page-title">Announcements</h1>
           <p className="page-subtitle">Latest updates from the Intelinfo team.</p>
 
+          {isAdminRoute && (
+            <div className="glass-card" style={{ marginBottom: '1rem', display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <button className={`glass-btn${view==='ann' ? ' primary' : ''}`} onClick={() => setView('ann')}>Announcements</button>
+                <button className={`glass-btn${view==='inbox' ? ' primary' : ''}`} onClick={() => { setView('inbox'); loadMessages(adminToken) }} style={{ marginLeft: 8 }}>Inbox</button>
+              </div>
+              {view === 'inbox' && adminToken && (
+                <a className="glass-btn-primary" href={`${API_BASE}/messages.csv?token=${encodeURIComponent(adminToken)}`}>Download CSV</a>
+              )}
+            </div>
+          )}
+
           <div className="ann-grid">
+            {view === 'ann' && (
             <div className="ann-list glass-card">
               {items.length === 0 ? (
                 <p className="empty">No announcements yet.</p>
@@ -135,6 +164,41 @@ const Announcements = () => {
                 </ul>
               )}
             </div>
+            )}
+
+            {isAdminRoute && view === 'inbox' && (
+              <div className="ann-list glass-card">
+                {!adminToken ? (
+                  <p className="empty">Login to view inbox.</p>
+                ) : messages.length === 0 ? (
+                  <p className="empty">No messages yet.</p>
+                ) : (
+                  <ul className="ann-items">
+                    {Object.entries(messages.reduce((acc, m) => {
+                        const key = m.contact_name || 'Unknown'
+                        if (!acc[key]) acc[key] = []
+                        acc[key].push(m)
+                        return acc
+                      }, {})).map(([name, list]) => (
+                        <li key={name} className="ann-item">
+                          <h3 className="ann-title">{name}</h3>
+                          <ul>
+                            {list.map(msg => (
+                              <li key={msg.id} style={{ marginBottom: '.5rem' }}>
+                                <div><strong>Subject:</strong> {msg.subject}</div>
+                                <div><strong>Email:</strong> <a href={`mailto:${msg.contact_email}`}>{msg.contact_email}</a></div>
+                                <div><strong>Message:</strong> {msg.message}</div>
+                                <div className="ann-meta">{new Date(msg.created_at * 1000).toLocaleString()}</div>
+                              </li>
+                            ))}
+                          </ul>
+                        </li>
+                      ))
+                    }
+                  </ul>
+                )}
+              </div>
+            )}
 
             {isAdminRoute && (
             <div className="ann-admin glass-card">

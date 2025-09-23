@@ -65,7 +65,7 @@ const Events = () => {
       type: "Non-Technical"
     },
     {
-      title: "BUILD WITH EUNZ (BUILD)",
+      title: "BUILD WITH FUNZ (BUILD)",
       description: "Creative build challenge using provided materials and constraints.",
       duration: "TBD",
       TeamSize: "1-2Memebers",
@@ -113,6 +113,12 @@ const Events = () => {
     'DESIGN WINGS (UI/UX)': '/events/design-wings',
     'BRAIN BUZZ (QUIZ)': '/events/brain-buzz',
     'PITCH IT (IDEA PRESENTATION)': '/events/pitch-it',
+    'BOOYAH BLAZE (E SPORT)': '/events/booyah-blaze',
+    'LINKORAX (CONNECTIONS)': '/events/linkorax',
+    'BUILD WITH FUNZ (BUILD)': '/events/build-with-funz',
+    'AD-VERSE': '/events/ad-verse',
+    'BEHIND THE LENS (PHOTOGRAPHY)': '/events/behind-the-lens',
+    'MIND MOSAIC (AI - PUZZLE HUNT)': '/events/mind-mosaic',
   }
 
   const EventCard = memo(({ event, index }) => (

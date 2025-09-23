@@ -1,0 +1,55 @@
+@font-face {
+  font-family: 'Booyah';
+  src: url('../../assets/booyah.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.event-booyah { padding-top: 80px; position: relative; background: #05080c; color: #e5e7eb; min-height: 100vh; overflow: hidden; font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; }
+.booyah-bg { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+#booyah-canvas, #main-canvas, canvas { display: block; width: 100%; height: 100%; pointer-events: none; }
+.fire-embers { position: fixed; inset: 0; background-image:
+  radial-gradient(2px 2px at 20% 30%, rgba(255,140,0,.35), transparent 60%),
+  radial-gradient(2px 2px at 60% 40%, rgba(255,80,0,.25), transparent 60%),
+  radial-gradient(2px 2px at 80% 20%, rgba(255,200,0,.28), transparent 60%),
+  radial-gradient(1px 1px at 30% 70%, rgba(255,120,0,.22), transparent 60%),
+  radial-gradient(1px 1px at 70% 80%, rgba(255,180,0,.26), transparent 60%);
+  animation: ember-drift 12s ease-in-out infinite alternate; filter: blur(.4px); z-index: 2; pointer-events: none; }
+@keyframes ember-drift { 0% { transform: translateY(0); opacity: .5; } 100% { transform: translateY(-10px); opacity: .8; } }
+.booyah-hero { padding: 3rem 0 3.5rem 0; text-align: center; background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); position: relative; z-index: 3; }
+.booyah-hero::after { content: ''; position: absolute; left: 10%; right: 10%; bottom: 0.75rem; height: 3px; border-radius: 999px; background: radial-gradient(circle at 50% 200%, rgba(255,200,0,.85), rgba(255,120,0,.65) 45%, rgba(255,60,0,.0) 70%); box-shadow: 0 0 18px rgba(255,120,0,.6), 0 0 36px rgba(255,60,0,.4); filter: blur(.3px); animation: fireline-pulse 2.6s ease-in-out infinite; }
+@keyframes fireline-pulse { 0%, 100% { opacity: .65; transform: scaleX(0.98); } 50% { opacity: 1; transform: scaleX(1.02); } }
+.booyah-hero .page-title { 
+  font-family: 'Booyah', 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 800; 
+  letter-spacing: .5px; 
+  background: linear-gradient(90deg, #ffd54f 0%, #ff9800 30%, #ff3d00 60%, #ff6e40 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: title-flicker 4s ease-in-out infinite; 
+}
+@keyframes title-flicker { 0%, 100% { filter: drop-shadow(0 0 8px rgba(255,120,0,.25)); } 20% { filter: drop-shadow(0 0 12px rgba(255,160,0,.35)); } 40% { filter: drop-shadow(0 0 10px rgba(255,90,0,.45)); } 60% { filter: drop-shadow(0 0 14px rgba(255,140,0,.35)); } 80% { filter: drop-shadow(0 0 9px rgba(255,100,0,.4)); } }
+.booyah-hero .page-subtitle { color: #cbd5e1; }
+.back-link { margin-top: 0.5rem; }
+.back-link a { color: #93c5fd; text-decoration: underline; }
+
+.booyah-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; position: relative; z-index: 2; }
+.booyah-card { padding: 1.25rem; background: rgba(2,6,23,0.6); border: 1px solid rgba(59,130,246,0.35); border-radius: 12px; box-shadow: 0 10px 28px rgba(0,0,0,0.35), 0 0 14px rgba(59,130,246,0.18); color: #e5e7eb; }
+.booyah-card h2 { margin: 0 0 0.75rem 0; font-size: 1.15rem; font-weight: 700; color: #fff; text-shadow: 0 0 10px rgba(59,130,246,0.25); }
+.booyah-card p, .booyah-card li { line-height: 1.6; }
+.booyah-card ol { margin: 0; padding-left: 1.25rem; }
+
+@media (min-width: 768px) {
+  .booyah-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .booyah-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 480px) { .event-booyah { padding-top: 70px; } }
+
+

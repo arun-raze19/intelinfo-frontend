@@ -1,16 +1,35 @@
-@font-face {
-  font-family: 'Dirtylane';
-  src: url('../../assets/Dirtylane.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+/* Desert Scene CSS Variables */
+:root {
+  --hue: 41;
+  --sand-dark: hsla(var(--hue), 61%, 53%, 1);
+  --sand-mid: hsla(var(--hue), 64%, 58%, 1);
+  --sand-soft: hsla(var(--hue), 71%, 64%, 1);
+  --sand-base: hsla(var(--hue), 90%, 69%, 1);
+  --sand-light: hsla(var(--hue), 100%, 72%, 1);
+  --sand-bright: hsla(var(--hue), 100%, 76%, 1);
+  --sand-glow: hsla(var(--hue), 100%, 79%, 0.8);
+  --animation-speed: 6s;
+  --camel-body: hsla(var(--hue), 60%, 45%, 1);
+  --camel-shadow: hsla(var(--hue), 55%, 35%, 1);
+  --camel-dark: hsla(var(--hue), 50%, 25%, 1);
+  --camel-eye: hsla(var(--hue), 65%, 10%, 1);
 }
-.event-pitch { padding-top: 80px; position: relative; background: linear-gradient(135deg, #FFECC0, #FFC29B 35%, #F39F9F 70%, #B95E82); color: #000; overflow: hidden; font-family: 'Dirtylane', 'Phatt', system-ui, sans-serif; }
+
+.event-pitch { 
+  padding-top: 80px; 
+  position: relative; 
+  background: linear-gradient(180deg, var(--sand-glow) 0%, var(--sand-soft) 60%, var(--sand-base) 100%); 
+  color: #000; 
+  overflow: hidden; 
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; 
+  min-height: 100vh;
+  perspective: 1000px;
+}
 .pitch-hero { padding: 3rem 0; text-align: center; background: rgba(255,255,255,0.02); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .pitch-hero .page-title {
-  font-family: 'Dirtylane', 'Phatt', system-ui, sans-serif;
-  font-weight: 900;
-  letter-spacing: 1px;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
   color: #000;
   /* 3D neon text effect */
   text-shadow:
@@ -112,6 +131,674 @@
 
 /* Ensure legacy tank visuals are hidden for this colorway */
 .pitch-water, .pitch-tank, .shark { display: none !important; }
+
+/* ===== MAGICAL DESERT SCENE STYLES ===== */
+
+.desert-scene {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  z-index: 1;
+}
+
+.desert-sun {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  width: 180px;
+  height: 180px;
+  transform: translate(-50%, 0);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--sand-bright) 20%, var(--sand-light) 60%, transparent 80%);
+  box-shadow: 0 0 60px var(--sand-glow), 0 0 120px var(--sand-bright);
+  animation: desert-glow var(--animation-speed) ease-in-out infinite alternate;
+  z-index: 1;
+}
+
+@keyframes desert-glow {
+  0% {
+    box-shadow: 0 0 40px var(--sand-glow), 0 0 80px var(--sand-bright);
+  }
+  100% {
+    box-shadow: 0 0 80px var(--sand-glow), 0 0 160px var(--sand-bright);
+  }
+}
+
+.desert-sun::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--sand-glow) 10%, transparent 50%);
+  animation: desert-lens-flare 8s ease-in-out infinite;
+}
+
+@keyframes desert-lens-flare {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0.6;
+  }
+}
+
+.desert-sand {
+  position: absolute;
+  bottom: 0;
+  width: 200%;
+  height: 50%;
+  background: radial-gradient(ellipse at 40% 100%, var(--sand-mid) 20%, var(--sand-dark) 80%);
+  border-radius: 50% 50% 0 0 / 20% 20% 0 0;
+  transform: translateX(-25%) translateZ(-100px);
+  z-index: 3;
+  transition: transform 0.3s ease;
+}
+
+.desert-sand.back {
+  bottom: 10%;
+  height: 40%;
+  background: radial-gradient(ellipse at 50% 100%, var(--sand-light) 30%, var(--sand-mid) 70%);
+  opacity: 0.85;
+  z-index: 2;
+  transform: translateX(-25%) translateZ(-200px);
+}
+
+.desert-foreground {
+  position: absolute;
+  bottom: -10%;
+  width: 200%;
+  height: 40%;
+  background: radial-gradient(ellipse at 60% 100%, var(--sand-light) 30%, var(--sand-mid) 70%);
+  border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+  transform: translateX(-25%) translateZ(0);
+  z-index: 5;
+  transition: transform 0.3s ease;
+}
+
+.desert-pyramid {
+  position: absolute;
+  bottom: 15%;
+  width: 0;
+  height: 0;
+  border-left: 200px solid transparent;
+  border-right: 200px solid transparent;
+  border-bottom: 160px solid var(--sand-base);
+  z-index: 4;
+  transform: translateZ(-50px);
+}
+
+.desert-pyramid::before {
+  content: '';
+  position: absolute;
+  left: -200px;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-left: 200px solid transparent;
+  border-right: 200px solid transparent;
+  border-bottom: 160px solid var(--sand-dark);
+  clip-path: polygon(50% 0, 100% 100%, 50% 100%);
+  opacity: 0.65;
+}
+
+.desert-pyramid::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sand-bright);
+  box-shadow: 0 0 10px var(--sand-bright);
+  transform: translateX(-50%);
+  animation: desert-sparkle 2.5s ease-in-out infinite;
+}
+
+.desert-pyramid.left {
+  left: 15%;
+}
+
+.desert-pyramid.right {
+  left: 55%;
+  transform: scale(0.85) translateZ(-50px);
+  opacity: 0.9;
+}
+
+.desert-haze {
+  position: absolute;
+  bottom: 40%;
+  width: 100%;
+  height: 15%;
+  background: linear-gradient(to top, transparent, var(--sand-glow), transparent);
+  opacity: 0.35;
+  filter: blur(12px);
+  z-index: 6;
+  animation: desert-haze-wave 7s ease-in-out infinite alternate;
+}
+
+@keyframes desert-haze-wave {
+  0% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateY(-5px);
+    opacity: 0.55;
+  }
+}
+
+.desert-cloud-wrapper {
+  position: absolute;
+  animation: desert-cloud-drift 30s linear infinite;
+  z-index: 2;
+}
+
+.desert-cloud {
+  width: 220px;
+  height: 70px;
+  position: relative;
+  border-radius: 100px;
+  background: radial-gradient(ellipse at center, var(--sand-dark) 40%, transparent 80%);
+  opacity: 0.6;
+  filter: blur(8px) brightness(1.1);
+  animation: desert-cloud-pulse 10s ease-in-out infinite;
+}
+
+.desert-cloud::before,
+.desert-cloud::after {
+  content: '';
+  position: absolute;
+  border-radius: 100px;
+  filter: blur(10px) brightness(1.05);
+}
+
+.desert-cloud::before {
+  width: 140px;
+  height: 90px;
+  top: -40px;
+  left: 20px;
+  background: radial-gradient(ellipse at center, var(--sand-mid) 30%, transparent 70%);
+  opacity: 0.7;
+}
+
+.desert-cloud::after {
+  width: 110px;
+  height: 70px;
+  top: -20px;
+  left: 90px;
+  background: radial-gradient(ellipse at center, var(--sand-light) 25%, transparent 75%);
+  opacity: 0.65;
+}
+
+@keyframes desert-cloud-drift {
+  from {
+    transform: translateX(-250px);
+  }
+  to {
+    transform: translateX(calc(100vw + 250px));
+  }
+}
+
+@keyframes desert-cloud-pulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+}
+
+.desert-sand-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--sand-base);
+  border-radius: 50%;
+  opacity: 0.7;
+  filter: blur(1px);
+  animation: desert-sand-drift 8s linear infinite;
+  z-index: 7;
+}
+
+@keyframes desert-sand-drift {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateX(50px) translateY(-10px) rotate(180deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(100px) translateY(0) rotate(360deg);
+    opacity: 0.7;
+  }
+}
+
+.desert-sparkle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sand-bright);
+  box-shadow: 0 0 10px var(--sand-glow);
+  opacity: 0;
+  animation: desert-sparkle 2.5s ease-in-out forwards;
+  pointer-events: none;
+  z-index: 8;
+}
+
+@keyframes desert-sparkle {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+.desert-heat-wave {
+  position: absolute;
+  bottom: 30%;
+  width: 100%;
+  height: 40%;
+  background: repeating-linear-gradient(45deg,
+      transparent,
+      transparent 4px,
+      rgba(255, 255, 255, 0.05) 6px);
+  opacity: 0.2;
+  filter: blur(3px);
+  animation: desert-wave-move 3s linear infinite;
+  z-index: 4;
+}
+
+@keyframes desert-wave-move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+.desert-mote {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: hsla(41, 100%, 85%, 0.8);
+  box-shadow: 0 0 6px hsla(41, 100%, 85%, 0.8);
+  animation: desert-float-mote 6s ease-in-out infinite;
+  z-index: 8;
+}
+
+@keyframes desert-float-mote {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(20px, -30px) scale(1.5);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(0, -60px) scale(1);
+    opacity: 0.5;
+  }
+}
+
+.desert-caravan {
+  position: absolute;
+  bottom: 22%;
+  width: 600px;
+  height: 150px;
+  z-index: 5;
+  animation: desert-caravan-move 30s linear infinite;
+}
+
+.desert-camel {
+  position: relative;
+  width: 260px;
+  height: 200px;
+  margin: 30px;
+  transform: scale(0.4);
+  opacity: 1;
+  visibility: visible;
+}
+
+.desert-camel.small {
+  transform: scale(0.3);
+}
+
+.desert-camel-body {
+  position: absolute;
+  bottom: 55px;
+  left: 25px;
+  width: 170px;
+  height: 75px;
+  background: linear-gradient(to top, var(--camel-body), var(--camel-shadow));
+  border-radius: 60% 60% 40% 40%;
+  z-index: 1;
+}
+
+.desert-camel-hump {
+  position: absolute;
+  bottom: 100px;
+  left: 65px;
+  width: 95px;
+  height: 75px;
+  background: linear-gradient(to bottom, var(--camel-body), var(--camel-shadow));
+  border-radius: 60% 60% 40px 40px / 60% 60% 15px 15px;
+  z-index: 2;
+}
+
+.desert-camel-neck {
+  position: absolute;
+  bottom: 90px;
+  left: 170px;
+  width: 28px;
+  height: 110px;
+  background: linear-gradient(to right, var(--camel-body), var(--camel-shadow));
+  border-radius: 25px;
+  transform: rotate(-12deg);
+  transform-origin: bottom center;
+  z-index: 2;
+}
+
+.desert-camel-head {
+  position: absolute;
+  bottom: 175px;
+  left: 155px;
+  width: 55px;
+  height: 38px;
+  background: var(--camel-body);
+  border-radius: 45% 55% 50% 40%;
+  box-shadow: inset -4px -3px 4px -3px var(--camel-shadow);
+  transform: rotate(10deg);
+  z-index: 3;
+}
+
+.desert-camel-eye {
+  position: absolute;
+  top: 11px;
+  left: 38px;
+  width: 7px;
+  height: 7px;
+  background: var(--camel-eye);
+  border-radius: 50%;
+  box-shadow: 0 0 2px rgba(0, 0, 0, .4);
+  z-index: 5;
+}
+
+.desert-camel-jaw {
+  position: absolute;
+  bottom: 2px;
+  left: 42px;
+  width: 30px;
+  height: 22px;
+  background: var(--camel-body);
+  border-radius: 1px 16px 4px 5px;
+  box-shadow: inset -3px -2px 3px -2px var(--camel-shadow);
+  z-index: 2;
+}
+
+.desert-camel-ear {
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  width: 10px;
+  height: 16px;
+  background: var(--camel-body);
+  border-radius: 50% 50% 30% 30%;
+  transform: rotate(-20deg);
+  z-index: 4;
+}
+
+.desert-camel-ear.right {
+  left: 22px;
+  transform: rotate(20deg);
+}
+
+.desert-camel-tail {
+  position: absolute;
+  bottom: 45px;
+  left: 20px;
+  width: 7px;
+  height: 50px;
+  background: var(--camel-body);
+  border-radius: 50%;
+  transform-origin: top center;
+  z-index: 0;
+  animation: desert-tailSwing 2.5s ease-in-out infinite;
+}
+
+.desert-camel-tail::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: -5px;
+  width: 18px;
+  height: 12px;
+  background: var(--camel-dark);
+  border-radius: 50%;
+}
+
+.desert-camel-leg {
+  position: absolute;
+  bottom: 0;
+  width: 14px;
+  height: 70px;
+  background: linear-gradient(to bottom, var(--camel-body), var(--camel-dark));
+  border-radius: 0 0 10px 10px;
+  transform-origin: top center;
+  animation: desert-legStep 1s ease-in-out infinite alternate;
+}
+
+.desert-camel-leg.front-left {
+  left: 45px;
+  z-index: 0;
+}
+
+.desert-camel-leg.front-right {
+  left: 75px;
+  z-index: 0;
+  animation-delay: .25s;
+}
+
+.desert-camel-leg.back-left {
+  left: 130px;
+  z-index: 0;
+  animation-delay: .5s;
+}
+
+.desert-camel-leg.back-right {
+  left: 160px;
+  z-index: 0;
+  animation-delay: .75s;
+}
+
+@keyframes desert-legStep {
+  0% {
+    transform: rotateX(0deg);
+  }
+  100% {
+    transform: rotateX(22deg);
+  }
+}
+
+@keyframes desert-tailSwing {
+  0%, 100% {
+    transform: rotate(-12deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+
+@keyframes desert-caravan-move {
+  0% {
+    left: -600px;
+  }
+  100% {
+    left: calc(100% + 600px);
+  }
+}
+
+.desert-arboles {
+  position: absolute;
+  border-bottom: 112px solid var(--sand-dark);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  height: 0;
+  width: 18px;
+  z-index: 5;
+}
+
+.desert-hojas {
+  position: absolute;
+  margin: 0px -3px;
+}
+
+.desert-hojas1,
+.desert-hojas4 {
+  position: absolute;
+  width: 75px;
+  height: 70px;
+  border-radius: 100%;
+  border-top: 12px solid var(--sand-mid);
+}
+
+.desert-hojas1 {
+  margin: -21px 3px;
+  animation: desert-agita1 0.9s alternate infinite;
+}
+
+.desert-hojas4 {
+  margin: -21px -66px;
+  animation: desert-agita4 0.9s alternate infinite;
+}
+
+.desert-hojas2,
+.desert-hojas5 {
+  position: absolute;
+  width: 75px;
+  height: 70px;
+  border-radius: 100%;
+  border-top: 12px solid var(--sand-light);
+}
+
+.desert-hojas2 {
+  margin: -12px 3px;
+  transform: rotate(21deg);
+  animation: desert-agita2 0.9s alternate infinite;
+}
+
+.desert-hojas5 {
+  margin: -12px -60px;
+  transform: rotate(-21deg);
+  animation: desert-agita5 0.9s alternate infinite;
+}
+
+.desert-hojas3,
+.desert-hojas6 {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 100%;
+  border-top: 12px solid var(--sand-bright);
+}
+
+.desert-hojas3 {
+  margin: -6px 0px;
+  transform: rotate(12deg);
+  animation: desert-agita3 0.9s alternate infinite;
+}
+
+.desert-hojas6 {
+  margin: -6px -53px;
+  transform: rotate(-12deg);
+  animation: desert-agita6 0.9s alternate infinite;
+}
+
+@keyframes desert-agita1 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-12deg);
+  }
+}
+
+@keyframes desert-agita2 {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  100% {
+    transform: translateY(-2px) translateX(0);
+  }
+}
+
+@keyframes desert-agita3 {
+  0% {
+    transform: translateY(0) translateX(0) rotate(12deg);
+  }
+  100% {
+    transform: translateY(-3px) translateX(3px);
+  }
+}
+
+@keyframes desert-agita4 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(12deg);
+  }
+}
+
+@keyframes desert-agita5 {
+  0% {
+    transform: translateY(0) translateX(0) rotate(-21deg);
+  }
+  100% {
+    transform: translateY(-3px) translateX(-3px);
+  }
+}
+
+@keyframes desert-agita6 {
+  0% {
+    transform: translateY(0) translateX(0) rotate(-12deg);
+  }
+  100% {
+    transform: translateY(-3px) translateX(-3px);
+  }
+}
+
+/* Ensure content appears above desert scene */
+.pitch-hero, .section {
+  position: relative;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
 
 
 

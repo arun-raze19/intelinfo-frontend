@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import './Navbar.css'
+import AnnouncementTicker from './AnnouncementTicker'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -75,6 +76,7 @@ const Navbar = () => {
           {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
+      <AnnouncementTicker />
     </nav>
   )
 }

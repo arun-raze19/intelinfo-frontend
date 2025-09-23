@@ -18,46 +18,67 @@ const Connect = () => {
     }))
   }, [])
 
-  const handleSubmit = useCallback((e) => {
+  // Resolve backend base URL (same as Announcements)
+  const API_BASE = (typeof window !== 'undefined') ? (
+    (import.meta?.env?.VITE_API_BASE) ||
+    `${window.location.protocol}//${window.location.hostname}:${import.meta?.env?.VITE_API_PORT || '8000'}`
+  ) : 'http://localhost:8000'
+
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log('Contact form submitted:', formData)
-    alert('Message sent successfully! We will get back to you within 24 hours.')
-    setFormData({
-      contactName: '',
-      contactEmail: '',
-      subject: '',
-      message: ''
-    })
-  }, [formData])
+    try {
+      const res = await fetch(`${API_BASE}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contact_name: formData.contactName,
+          contact_email: formData.contactEmail,
+          subject: formData.subject,
+          message: formData.message,
+        })
+      })
+      if (!res.ok) {
+        const txt = await res.text()
+        alert('Failed to send: ' + txt)
+        return
+      }
+      alert('Message sent successfully! We will get back to you within 24 hours.')
+      setFormData({ contactName: '', contactEmail: '', subject: '', message: '' })
+    } catch (err) {
+      alert('Network error. Please try again later.')
+    }
+  }, [API_BASE, formData])
 
   const contactInfo = useMemo(() => [
     {
       icon: <Mail className="contact-icon" />,
       title: "Email",
-      details: "info@intelinfo2k25.com",
+      details: (<a href="mailto:info@intelinfo2k25.com">info@intelinfo2k25.com</a>),
       description: "Send us an email anytime"
     },
     {
       icon: <Phone className="contact-icon" />,
-      title: "Phone",
-      details: "+1 (555) 123-4567",
-      description: "Call us during business hours"
+      title: "Overall Coordinators",
+      details: (
+        <>
+          S. R. MITHRA / AI&DS – <a href="tel:+918825571572">+91 8825571572</a><br/>
+          V. ARUN KUMAR / AI&DS – <a href="tel:+919500600673">+91 9500600673</a><br/>
+          M. ARUN KUMAR / IT – <a href="tel:+919361450485">+91 9361450485</a><br/>
+          R. RAHUL / IT – <a href="tel:+919677823318">+91 9677823318</a>
+        </>
+      ),
+      description: "Tap to call the core team"
     },
     {
       icon: <MapPin className="contact-icon" />,
-      title: "Venue",
-      details: "Tech Innovation Center",
-      address: "123 Innovation Drive\nSilicon Valley, CA 94000",
-      description: "Visit us at our main venue"
+      title: "Location",
+      details: (<a href="https://maps.app.goo.gl/XSUJqEU7nrpGHXuq7" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>),
+      description: "Get directions to the venue"
     }
   ], [])
 
   const socialLinks = useMemo(() => [
-    { icon: <Twitter className="social-icon" />, name: "Twitter", url: "#", color: "#1DA1F2" },
-    { icon: <Linkedin className="social-icon" />, name: "LinkedIn", url: "#", color: "#0077B5" },
-    { icon: <Instagram className="social-icon" />, name: "Instagram", url: "#", color: "#E4405F" },
-    { icon: <Facebook className="social-icon" />, name: "Facebook", url: "#", color: "#1877F2" }
+    { icon: <Instagram className="social-icon" />, name: "Instagram", url: "https://www.instagram.com/arka_2k25?igsh=MTZkZ2VkeGl6OXM3MQ==", color: "#E4405F" }
   ], [])
 
   const teamStats = useMemo(() => [
@@ -120,18 +141,33 @@ const Connect = () => {
               </div>
 
               {/* Team Stats */}
-              <div className="team-stats glass-card animate-slide-left" style={{ animationDelay: '0.4s' }}>
-                <h3>Our Team</h3>
-                <div className="stats-grid">
-                  {teamStats.map((stat, index) => (
-                    <div key={index} className="stat-item">
-                      {stat.icon}
-                      <div className="stat-content">
-                        <span className="stat-value">{stat.value}</span>
-                        <span className="stat-label">{stat.label}</span>
-                      </div>
-                    </div>
-                  ))}
+              {/* Removed Our Team stats section as requested */}
+
+              {/* Coordinators */}
+              <div className="glass-card animate-slide-left" style={{ animationDelay: '0.5s' }}>
+                <h3>Event Coordinators</h3>
+                <div className="coordinator-grid">
+                  <div className="coordinator-column">
+                    <h4>Technical</h4>
+                    <ul className="coordinator-list">
+                      <li>Ilangovan S – <a href="tel:+919790008749">97900 08749</a></li>
+                      <li>Madhu Mitha R – <a href="tel:+918248302625">82483 02625</a></li>
+                      <li>Rahul R – <a href="tel:+919677823318">96778 23318</a></li>
+                      <li>Balaji K – <a href="tel:+917708089146">77080 89146</a></li>
+                    </ul>
+                  </div>
+                  <div className="coordinator-column">
+                    <h4>Non-Technical</h4>
+                    <ul className="coordinator-list">
+                      <li>Artheeshwari V – <a href="tel:+917639973465">76399 73465</a></li>
+                      <li>Mohamed Noufiez A – <a href="tel:+919042595186">90425 95186</a></li>
+                      <li>Ibnu Abbas Baig J H – <a href="tel:+917338928029">73389 28029</a></li>
+                      <li>Arun Kumar M – <a href="tel:+919361450485">93614 50485</a></li>
+                      <li>Babu – <a href="tel:+916381837277">63818 37277</a></li>
+                      <li>Shanmugapriya D – <a href="tel:+919994931899">99949 31899</a></li>
+                      <li>Swathi S – <a href="tel:+919500302554">95003 02554</a></li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -205,30 +241,7 @@ const Connect = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="faq-section section">
-        <div className="container">
-          <h2 className="section-title animate-slide-up">Frequently Asked Questions</h2>
-          <div className="faq-grid">
-            <div className="faq-item glass-card animate-slide-up" style={{ animationDelay: '0.1s' }}>
-              <h4>When is the event?</h4>
-              <p>INTELINFO 2k25 will be held from March 15-17, 2025, at the Tech Innovation Center in Silicon Valley.</p>
-            </div>
-            <div className="faq-item glass-card animate-slide-up" style={{ animationDelay: '0.2s' }}>
-              <h4>How much does registration cost?</h4>
-              <p>Early bird pricing: $99 for Full Access Pass, $49 for Student Pass. Regular pricing starts after the early bird period.</p>
-            </div>
-            <div className="faq-item glass-card animate-slide-up" style={{ animationDelay: '0.3s' }}>
-              <h4>What's included in the registration?</h4>
-              <p>Access to all events, networking sessions, workshop materials, meals, and a certificate of participation.</p>
-            </div>
-            <div className="faq-item glass-card animate-slide-up" style={{ animationDelay: '0.4s' }}>
-              <h4>Can I get a refund?</h4>
-              <p>Yes, we offer full refunds up to 30 days before the event. Contact us for more details.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Removed Location section at bottom as requested */}
     </div>
   )
 }

@@ -7,8 +7,21 @@ services:
     ports:
       - "8004:80"
     environment:
-      # If your frontend needs to call an existing backend, set it here.
-      # Otherwise you can remove this line or set it at runtime:
-      # VITE_BACKEND_URL=https://your-backend.example.com
-      - VITE_BACKEND_URL=
+      # Backend API configuration
+      - VITE_API_BASE=https://api.intelinfo.me
+      - VITE_API_PORT=8005
+      # Enable production optimizations
+      - NODE_ENV=production
+      # Enable source maps for debugging (optional)
+      - VITE_SOURCEMAP=false
+    volumes:
+      # Mount nginx config for easy updates
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 

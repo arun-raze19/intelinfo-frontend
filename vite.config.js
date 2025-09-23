@@ -22,7 +22,7 @@ export default defineConfig({
     port: 3001,
     open: true,
     host: true,
-    allowedHosts: ['1fed209c4133.ngrok-free.app']
+    allowedHosts: ['30afbe4ec9c1.ngrok-free.app']
   },
   preview: {
     port: 4173,
