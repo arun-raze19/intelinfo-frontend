@@ -1,0 +1,32 @@
+# Coolify Docker Compose for INTELINFO Frontend
+# Optimized for Coolify deployment
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.coolify
+    container_name: intelinfo-frontend-coolify
+    ports:
+      - "80:80"
+    environment:
+      # API Configuration
+      - VITE_API_BASE=https://api.intelinfo.me
+      - VITE_API_PORT=8005
+      
+      # Production settings
+      - NODE_ENV=production
+      - VITE_SOURCEMAP=false
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - intelinfo-network
+
+networks:
+  intelinfo-network:
+    driver: bridge
