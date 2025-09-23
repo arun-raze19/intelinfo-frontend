@@ -5,7 +5,7 @@ import './Announcements.css'
 const API_BASE = (typeof window !== 'undefined') ? (
   (import.meta?.env?.VITE_API_BASE) ||
   `${window.location.protocol}//${window.location.hostname}:${import.meta?.env?.VITE_API_PORT || '8000'}`
-) : 'http://localhost:8000'
+) : (import.meta?.env?.VITE_API_BASE || 'http://localhost:8000')
 
 const Announcements = () => {
   const [items, setItems] = useState([])
