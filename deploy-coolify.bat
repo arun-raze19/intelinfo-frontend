@@ -81,7 +81,7 @@ echo - Backend: intelinfo-backend/COOLIFY_DOCKER_DEPLOYMENT.md
 echo - Frontend: COOLIFY_FRONTEND_DEPLOYMENT.md
 echo.
 echo 🔧 Local Testing:
-echo - Backend: docker run -p 8005:8000 intelinfo-backend-coolify
+echo - Backend: docker run -p 8006:8000 intelinfo-backend-coolify
 echo - Frontend: docker run -p 80:80 intelinfo-frontend-coolify
 echo.
 

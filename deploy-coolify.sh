@@ -112,7 +112,7 @@ test_images() {
     # Test backend
     print_status "Testing backend image..."
     docker run --rm -d --name test-backend \
-        -p 8005:8000 \
+        -p 8006:8000 \
         -e GROQ_API_KEY="$GROQ_API_KEY" \
         -e ADMIN_USERNAME="$ADMIN_USERNAME" \
         -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
@@ -122,7 +122,7 @@ test_images() {
     sleep 10
     
     # Test health endpoint
-    if curl -f http://localhost:8005/health > /dev/null 2>&1; then
+    if curl -f http://localhost:8006/health > /dev/null 2>&1; then
         print_success "Backend health check passed."
     else
         print_error "Backend health check failed."
@@ -137,7 +137,7 @@ test_images() {
     print_status "Testing frontend image..."
     docker run --rm -d --name test-frontend \
         -p 8080:80 \
-        -e VITE_API_BASE=http://localhost:8005 \
+        -e VITE_API_BASE=http://localhost:8006 \
         intelinfo-frontend-coolify
     
     # Wait for frontend to start
@@ -177,7 +177,7 @@ export ADMIN_PASSWORD="${ADMIN_PASSWORD:-Intelinfo@2025}"
 # Build and deploy
 docker build -f Dockerfile.coolify -t intelinfo-backend-coolify .
 docker run -d --name intelinfo-backend \
-    -p 8005:8000 \
+    -p 8006:8000 \
     -e GROQ_API_KEY="$GROQ_API_KEY" \
     -e ADMIN_USERNAME="$ADMIN_USERNAME" \
     -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
@@ -189,8 +189,8 @@ docker run -d --name intelinfo-backend \
     intelinfo-backend-coolify
 
 echo "✅ Backend deployed successfully!"
-echo "🌐 Backend URL: http://localhost:8005"
-echo "🔍 Health Check: http://localhost:8005/health"
+echo "🌐 Backend URL: http://localhost:8006"
+echo "🔍 Health Check: http://localhost:8006/health"
 EOF
 
     # Create frontend deployment file
@@ -202,7 +202,7 @@ echo "🚀 Deploying INTELINFO Frontend to Coolify..."
 
 # Set environment variables
 export VITE_API_BASE="${VITE_API_BASE:-https://api.intelinfo.me}"
-export VITE_API_PORT="${VITE_API_PORT:-8005}"
+export VITE_API_PORT="${VITE_API_PORT:-8006}"
 export NODE_ENV="production"
 export VITE_SOURCEMAP="false"
 
@@ -243,7 +243,7 @@ services:
       context: .
       dockerfile: Dockerfile.coolify
     ports:
-      - "8005:8000"
+      - "8006:8000"
     environment:
       - GROQ_API_KEY=${GROQ_API_KEY}
       - ADMIN_USERNAME=${ADMIN_USERNAME:-ADMIN}
@@ -280,7 +280,7 @@ services:
       - "80:80"
     environment:
       - VITE_API_BASE=${VITE_API_BASE:-https://api.intelinfo.me}
-      - VITE_API_PORT=${VITE_API_PORT:-8005}
+      - VITE_API_PORT=${VITE_API_PORT:-8006}
       - NODE_ENV=production
       - VITE_SOURCEMAP=false
     restart: unless-stopped

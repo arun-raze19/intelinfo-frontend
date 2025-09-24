@@ -36,7 +36,7 @@ Set these environment variables in Coolify:
 ```bash
 # Required Environment Variables
 VITE_API_BASE=https://api.intelinfo.me
-VITE_API_PORT=8005
+VITE_API_PORT=8006
 NODE_ENV=production
 VITE_SOURCEMAP=false
 ```

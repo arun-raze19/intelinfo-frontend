@@ -9,7 +9,7 @@ services:
     environment:
       # Backend API configuration
       - VITE_API_BASE=https://api.intelinfo.me
-      - VITE_API_PORT=8005
+      - VITE_API_PORT=8006
       # Enable production optimizations
       - NODE_ENV=production
       # Enable source maps for debugging (optional)
