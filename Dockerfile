@@ -20,6 +20,18 @@ RUN npm ci --only=production --silent --no-audit --no-fund && \
 # Copy source code
 COPY . .
 
+# Set environment variables for build process
+ARG VITE_API_BASE=https://api.intelinfo.me
+ARG VITE_API_PORT=8006
+ARG NODE_ENV=production
+ARG VITE_SOURCEMAP=false
+
+# Export environment variables for Vite build
+ENV VITE_API_BASE=$VITE_API_BASE
+ENV VITE_API_PORT=$VITE_API_PORT
+ENV NODE_ENV=$NODE_ENV
+ENV VITE_SOURCEMAP=$VITE_SOURCEMAP
+
 # Build the application with optimizations
 RUN npm run build
 

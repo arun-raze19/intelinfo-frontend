@@ -3,17 +3,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        VITE_API_BASE: https://api.intelinfo.me
+        VITE_API_PORT: 8006
+        NODE_ENV: production
+        VITE_SOURCEMAP: false
     container_name: intelinfo-frontend
     ports:
       - "8004:80"
-    environment:
-      # Backend API configuration
-      - VITE_API_BASE=https://api.intelinfo.me
-      - VITE_API_PORT=8006
-      # Enable production optimizations
-      - NODE_ENV=production
-      # Enable source maps for debugging (optional)
-      - VITE_SOURCEMAP=false
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
