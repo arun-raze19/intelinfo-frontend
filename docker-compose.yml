@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: intelinfo-frontend
     ports:
-      - "80:80"
+      - "8004:80"
     environment:
       # Backend API configuration
       - VITE_API_BASE=https://api.intelinfo.me
