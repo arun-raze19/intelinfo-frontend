@@ -275,9 +275,10 @@ const Home = () => {
     {
       icon: <Utensils className="feature-icon" />,
       title: "Food Court",
-      description: "Savor delicious meals and refreshments at our dedicated food court"
+      description: "Savor delicious meals and refreshments at our dedicated food court",
+      onClick: () => navigate('/food-court')
     }
-  ], [])
+  ], [navigate])
 
   const stats = useMemo(() => [
     { icon: <Calendar className="stat-icon" />, value: "October 11, 2025", label: "Saturday Event" },
@@ -343,8 +344,10 @@ const Home = () => {
           <h2 className="section-title animate-slide-up">Why Attend INTELINFO 2k25?</h2>
           <div className="features-grid">
             {features.map((feature, index) => (
-              <div key={index} className="feature-card glass-card animate-slide-up" 
-                   style={{ animationDelay: `${index * 0.1}s` }}>
+              <div key={index} 
+                   className={`feature-card glass-card animate-slide-up ${feature.onClick ? 'clickable-feature' : ''}`}
+                   style={{ animationDelay: `${index * 0.1}s` }}
+                   onClick={feature.onClick}>
                 <div className="feature-icon-container">
                   {feature.icon}
                 </div>

@@ -465,6 +465,16 @@
   will-change: transform;
 }
 
+.clickable-feature {
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.clickable-feature:hover {
+  transform: translate3d(0, -8px, 0) scale(1.02);
+  box-shadow: 0 20px 40px rgba(79, 172, 254, 0.3);
+}
+
 .feature-icon-container {
   width: 4rem;
   height: 4rem;

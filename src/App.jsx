@@ -19,6 +19,7 @@ import EventBooyahBlaze from './pages/events/EventBooyahBlaze'
 import Registration from './pages/Registration'
 import Connect from './pages/Connect'
 import Announcements from './pages/Announcements'
+import FoodCourt from './pages/FoodCourt'
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
           <Route path="/registration" element={<Registration />} />
           <Route path="/connect" element={<Connect />} />
           <Route path="/announcements" element={<Announcements />} />
+          <Route path="/food-court" element={<FoodCourt />} />
           <Route path="/admin" element={<Announcements />} />
         </Routes>
         <MobileNav />
