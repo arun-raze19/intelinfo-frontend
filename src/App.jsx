@@ -8,6 +8,7 @@ import ApiUrlDebugger from './components/ApiUrlDebugger'
 import LoginTest from './components/LoginTest'
 import MessagesTest from './components/MessagesTest'
 import UserMessagesTest from './components/UserMessagesTest'
+import GetMessagesTest from './components/GetMessagesTest'
 import Home from './pages/Home'
 import Events from './pages/Events'
 import EventAnamoly from './pages/events/EventAnamoly'
@@ -58,6 +59,7 @@ function App() {
           <Route path="/login-test" element={<LoginTest />} />
           <Route path="/messages-test" element={<MessagesTest />} />
           <Route path="/user-messages-test" element={<UserMessagesTest />} />
+          <Route path="/get-messages-test" element={<GetMessagesTest />} />
         </Routes>
         <MobileNav />
         <FloatingChatbot />

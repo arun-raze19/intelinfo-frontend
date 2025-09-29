@@ -140,7 +140,13 @@ export const messages = {
   
   list: async (token) => {
     const endpoint = token ? `/messages?token=${encodeURIComponent(token)}` : '/messages'
-    return apiRequest(endpoint)
+    console.log('Fetching messages with GET method from:', endpoint)
+    return apiRequest(endpoint, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   },
   
   exportCsv: async (token) => {
