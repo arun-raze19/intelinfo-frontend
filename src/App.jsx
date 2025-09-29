@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import MobileNav from './components/MobileNav'
 import FloatingChatbot from './components/FloatingChatbot'
 import ApiTest from './components/ApiTest'
+import FunctionalTest from './components/FunctionalTest'
 import Home from './pages/Home'
 import Events from './pages/Events'
 import EventAnamoly from './pages/events/EventAnamoly'
@@ -48,6 +49,7 @@ function App() {
           <Route path="/food-court" element={<FoodCourt />} />
           <Route path="/admin" element={<Announcements />} />
           <Route path="/api-test" element={<ApiTest />} />
+          <Route path="/functional-test" element={<FunctionalTest />} />
         </Routes>
         <MobileNav />
         <FloatingChatbot />

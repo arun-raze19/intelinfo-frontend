@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { healthCheck, announcements } from '../utils/api'
+import { healthCheck, announcements, messages, rag, auth } from '../utils/api'
 
 const ApiTest = () => {
   const [testResults, setTestResults] = useState([])
@@ -31,7 +31,40 @@ const ApiTest = () => {
       addResult('Health Check', 'error', error.message)
     }
 
-    // Test 3: Announcements
+    // Test 3: All health endpoints
+    try {
+      addResult('Ready Check', 'running', 'Testing ready endpoint...')
+      const readyResult = await healthCheck.ready()
+      addResult('Ready Check', 'success', 'Ready check passed', readyResult)
+    } catch (error) {
+      addResult('Ready Check', 'error', error.message)
+    }
+
+    try {
+      addResult('Startup Check', 'running', 'Testing startup endpoint...')
+      const startupResult = await healthCheck.startup()
+      addResult('Startup Check', 'success', 'Startup check passed', startupResult)
+    } catch (error) {
+      addResult('Startup Check', 'error', error.message)
+    }
+
+    try {
+      addResult('Test Endpoint', 'running', 'Testing test endpoint...')
+      const testResult = await healthCheck.test()
+      addResult('Test Endpoint', 'success', 'Test endpoint passed', testResult)
+    } catch (error) {
+      addResult('Test Endpoint', 'error', error.message)
+    }
+
+    try {
+      addResult('Debug Endpoint', 'running', 'Testing debug endpoint...')
+      const debugResult = await healthCheck.debug()
+      addResult('Debug Endpoint', 'success', 'Debug endpoint passed', debugResult)
+    } catch (error) {
+      addResult('Debug Endpoint', 'error', error.message)
+    }
+
+    // Test 4: Announcements
     try {
       addResult('Announcements', 'running', 'Testing announcements endpoint...')
       const announcementsResult = await announcements.list()
@@ -40,7 +73,34 @@ const ApiTest = () => {
       addResult('Announcements', 'error', error.message)
     }
 
-    // Test 4: CORS check
+    // Test 5: Messages (without token - should work for public access)
+    try {
+      addResult('Messages List', 'running', 'Testing messages endpoint (public)...')
+      const messagesResult = await messages.list()
+      addResult('Messages List', 'success', `Messages endpoint accessible`, messagesResult)
+    } catch (error) {
+      addResult('Messages List', 'error', error.message)
+    }
+
+    // Test 6: RAG Chat
+    try {
+      addResult('RAG Chat', 'running', 'Testing RAG chat endpoint...')
+      const chatResult = await rag.chat('Hello, what is INTELINFO?')
+      addResult('RAG Chat', 'success', 'RAG chat working', chatResult)
+    } catch (error) {
+      addResult('RAG Chat', 'error', error.message)
+    }
+
+    // Test 7: RAG Ingest
+    try {
+      addResult('RAG Ingest', 'running', 'Testing RAG ingest endpoint...')
+      const ingestResult = await rag.ingest({ texts: ['Test content for RAG ingestion'] })
+      addResult('RAG Ingest', 'success', 'RAG ingest working', ingestResult)
+    } catch (error) {
+      addResult('RAG Ingest', 'error', error.message)
+    }
+
+    // Test 8: CORS check
     try {
       addResult('CORS Check', 'running', 'Testing CORS configuration...')
       const response = await fetch('https://api.intelinfo.me/ping', {
@@ -54,6 +114,50 @@ const ApiTest = () => {
       addResult('CORS Check', 'success', 'CORS preflight successful', { status: response.status })
     } catch (error) {
       addResult('CORS Check', 'error', error.message)
+    }
+
+    // Test 9: Test message creation (this should work)
+    try {
+      addResult('Message Creation', 'running', 'Testing message creation...')
+      const messageResult = await messages.create({
+        contactName: 'Test User',
+        contactEmail: 'test@example.com',
+        subject: 'API Test',
+        message: 'This is a test message from the API test tool'
+      })
+      addResult('Message Creation', 'success', 'Message creation working', messageResult)
+    } catch (error) {
+      addResult('Message Creation', 'error', error.message)
+    }
+
+    // Test 10: WebSocket connection test
+    try {
+      addResult('WebSocket Test', 'running', 'Testing WebSocket connection...')
+      const wsUrl = 'wss://api.intelinfo.me/ws'
+      const ws = new WebSocket(wsUrl)
+      
+      const wsTestPromise = new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          ws.close()
+          reject(new Error('WebSocket connection timeout'))
+        }, 5000)
+        
+        ws.onopen = () => {
+          clearTimeout(timeout)
+          ws.close()
+          resolve('WebSocket connected successfully')
+        }
+        
+        ws.onerror = (error) => {
+          clearTimeout(timeout)
+          reject(new Error('WebSocket connection failed'))
+        }
+      })
+      
+      const wsResult = await wsTestPromise
+      addResult('WebSocket Test', 'success', wsResult)
+    } catch (error) {
+      addResult('WebSocket Test', 'error', error.message)
     }
 
     setIsRunning(false)
@@ -87,6 +191,27 @@ const ApiTest = () => {
           <p>No tests run yet. Click the button above to start testing.</p>
         ) : (
           <div>
+            {/* Summary */}
+            <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+              <h4>Summary:</h4>
+              <p>
+                <strong>Total Tests:</strong> {testResults.length} | 
+                <strong style={{ color: 'green' }}> Passed:</strong> {testResults.filter(r => r.status === 'success').length} | 
+                <strong style={{ color: 'red' }}> Failed:</strong> {testResults.filter(r => r.status === 'error').length}
+              </p>
+              {testResults.filter(r => r.status === 'error').length > 0 && (
+                <div style={{ marginTop: '10px' }}>
+                  <strong style={{ color: 'red' }}>Failed Tests:</strong>
+                  <ul>
+                    {testResults.filter(r => r.status === 'error').map((result, index) => (
+                      <li key={index}>{result.test}: {result.message}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* Detailed Results */}
             {testResults.map((result, index) => (
               <div 
                 key={index} 
