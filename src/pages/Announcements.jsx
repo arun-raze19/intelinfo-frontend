@@ -15,6 +15,7 @@ const Announcements = () => {
 
   const [form, setForm] = useState({ kind: 'text', title: '', content: '' })
   const [file, setFile] = useState(null)
+  const [filePreview, setFilePreview] = useState(null)
 
   const load = useCallback(async () => {
     try {
@@ -133,9 +134,25 @@ const Announcements = () => {
       
       setForm({ kind: 'text', title: '', content: '' })
       setFile(null)
+      setFilePreview(null)
     } catch (error) {
       console.error('Failed to create announcement:', error)
       alert('Failed to post: ' + error.message)
+    }
+  }
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files?.[0] || null
+    setFile(selectedFile)
+    
+    if (selectedFile) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setFilePreview(e.target.result)
+      }
+      reader.readAsDataURL(selectedFile)
+    } else {
+      setFilePreview(null)
     }
   }
 
@@ -197,10 +214,48 @@ const Announcements = () => {
                         <a className="ann-link" href={item.content} target="_blank" rel="noopener noreferrer">{item.content}</a>
                       )}
                       {item.kind === 'image' && item.content && (
-                        <img className="ann-media" src={item.content} alt={item.title || 'Announcement'} />
+                        <div className="ann-media-container">
+                          <img 
+                            className="ann-media" 
+                            src={item.content} 
+                            alt={item.title || 'Announcement'} 
+                            loading="lazy"
+                            onError={(e) => {
+                              console.error('Failed to load image:', item.content)
+                              e.target.style.display = 'none'
+                              e.target.nextSibling.style.display = 'block'
+                            }}
+                            onLoad={() => {
+                              console.log('Image loaded successfully:', item.content)
+                            }}
+                          />
+                          <div className="ann-media-error" style={{ display: 'none', padding: '1rem', textAlign: 'center', color: '#ef4444' }}>
+                            Failed to load image
+                          </div>
+                        </div>
                       )}
                       {item.kind === 'video' && item.content && (
-                        <video className="ann-media" src={item.content} controls />
+                        <div className="ann-media-container">
+                          <video 
+                            className="ann-media" 
+                            src={item.content} 
+                            controls 
+                            preload="metadata"
+                            onError={(e) => {
+                              console.error('Failed to load video:', item.content)
+                              e.target.style.display = 'none'
+                              e.target.nextSibling.style.display = 'block'
+                            }}
+                            onLoadedData={() => {
+                              console.log('Video loaded successfully:', item.content)
+                            }}
+                          >
+                            Your browser does not support the video tag.
+                          </video>
+                          <div className="ann-media-error" style={{ display: 'none', padding: '1rem', textAlign: 'center', color: '#ef4444' }}>
+                            Failed to load video
+                          </div>
+                        </div>
                       )}
                       <div className="ann-meta">{new Date(item.created_at * 1000).toLocaleString()}</div>
                       {adminToken && (
@@ -273,7 +328,31 @@ const Announcements = () => {
                   {form.kind === 'text' || form.kind === 'link' ? (
                     <input type="text" placeholder={form.kind === 'text' ? 'Text content' : 'https://link'} value={form.content} onChange={e => setForm({ ...form, content: e.target.value })} />
                   ) : (
-                    <input type="file" accept={form.kind === 'image' ? 'image/*' : 'video/*'} onChange={e => setFile(e.target.files?.[0] || null)} />
+                    <div>
+                      <input type="file" accept={form.kind === 'image' ? 'image/*' : 'video/*'} onChange={handleFileChange} />
+                      {filePreview && (
+                        <div className="ann-media-container" style={{ marginTop: '.5rem' }}>
+                          <h4 style={{ margin: '0 0 .5rem 0', fontSize: '.9rem', color: 'var(--text-secondary)' }}>Preview:</h4>
+                          {form.kind === 'image' ? (
+                            <img 
+                              className="ann-media" 
+                              src={filePreview} 
+                              alt="Preview" 
+                              style={{ maxHeight: '200px' }}
+                            />
+                          ) : (
+                            <video 
+                              className="ann-media" 
+                              src={filePreview} 
+                              controls 
+                              style={{ maxHeight: '200px' }}
+                            >
+                              Your browser does not support the video tag.
+                            </video>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   )}
                   <button type="submit" className="glass-btn-primary">Post</button>
                 </form>

@@ -6,7 +6,22 @@
 .ann-title { margin: 0 0 .5rem 0; font-size: 1.1rem; font-weight: 600; color: var(--text-primary); }
 .ann-text { margin: 0; color: var(--text-secondary); }
 .ann-link { color: var(--accent-500); word-break: break-all; }
-.ann-media { width: 100%; height: auto; border-radius: var(--radius-sm); }
+.ann-media-container { margin: .5rem 0; }
+.ann-media { 
+  width: 100%; 
+  height: auto; 
+  border-radius: var(--radius-sm); 
+  max-height: 400px; 
+  object-fit: contain; 
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+.ann-media-error { 
+  background: var(--glass-bg); 
+  border: 1px solid #ef4444; 
+  border-radius: var(--radius-sm); 
+  margin: .5rem 0; 
+}
 .ann-meta { margin-top: .5rem; font-size: .85rem; color: var(--text-muted); }
 .ann-form { display: flex; flex-direction: column; gap: .75rem; }
 .ann-form input, .ann-form select { padding: .75rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-primary); }
