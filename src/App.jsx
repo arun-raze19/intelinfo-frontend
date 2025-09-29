@@ -7,6 +7,7 @@ import FunctionalTest from './components/FunctionalTest'
 import ApiUrlDebugger from './components/ApiUrlDebugger'
 import LoginTest from './components/LoginTest'
 import MessagesTest from './components/MessagesTest'
+import UserMessagesTest from './components/UserMessagesTest'
 import Home from './pages/Home'
 import Events from './pages/Events'
 import EventAnamoly from './pages/events/EventAnamoly'
@@ -56,6 +57,7 @@ function App() {
           <Route path="/api-debug" element={<ApiUrlDebugger />} />
           <Route path="/login-test" element={<LoginTest />} />
           <Route path="/messages-test" element={<MessagesTest />} />
+          <Route path="/user-messages-test" element={<UserMessagesTest />} />
         </Routes>
         <MobileNav />
         <FloatingChatbot />

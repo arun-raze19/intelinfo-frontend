@@ -44,6 +44,15 @@ const Announcements = () => {
       
       const data = await messages.list(token)
       console.log('Messages loaded successfully:', data)
+      console.log('Messages count:', data.length)
+      console.log('Messages structure:', data.map(m => ({
+        id: m.id,
+        contact_name: m.contact_name,
+        contact_email: m.contact_email,
+        subject: m.subject,
+        message: m.message?.substring(0, 50) + '...',
+        created_at: m.created_at
+      })))
       setMessages(data)
       
       if (data.length === 0) {
@@ -216,6 +225,7 @@ const Announcements = () => {
                   <p className="empty">No messages yet.</p>
                 ) : (
                   <ul className="ann-items">
+                    {console.log('Rendering messages:', messages)}
                     {Object.entries(messages.reduce((acc, m) => {
                         const key = m.contact_name || 'Unknown'
                         if (!acc[key]) acc[key] = []
