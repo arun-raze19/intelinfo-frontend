@@ -1,11 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './AnnouncementTicker.css'
-
-// Reuse API base resolution like Announcements
-const API_BASE = (typeof window !== 'undefined') ? (
-  (import.meta?.env?.VITE_API_BASE) ||
-  `${window.location.protocol}//${window.location.hostname}:${import.meta?.env?.VITE_API_PORT || '8000'}`
-) : (import.meta?.env?.VITE_API_BASE || 'http://localhost:8000')
+import { announcements, createWebSocket } from '../utils/api'
 
 export default function AnnouncementTicker() {
   const [items, setItems] = useState([])
@@ -13,28 +8,39 @@ export default function AnnouncementTicker() {
 
   useEffect(() => {
     let mounted = true
+    
+    // Load announcements using the centralized API service
     ;(async () => {
       try {
-        const res = await fetch(`${API_BASE}/announcements`)
-        const data = await res.json()
+        const data = await announcements.list()
         if (!mounted) return
         setItems(data.filter(a => a.kind === 'text'))
-      } catch {}
+      } catch (error) {
+        console.error('Failed to load announcements for ticker:', error)
+      }
     })()
-    const wsScheme = API_BASE.startsWith('https') ? 'wss' : 'ws'
-    const ws = new WebSocket(`${API_BASE.replace(/^https?/, wsScheme)}/ws`)
-    wsRef.current = ws
-    ws.onmessage = (ev) => {
-      try {
-        const msg = JSON.parse(ev.data)
+
+    // Use centralized WebSocket service
+    const ws = createWebSocket(
+      (msg) => {
         if (msg?.type === 'new_announcement' && msg.payload?.kind === 'text') {
           setItems(prev => [msg.payload, ...prev])
         } else if (msg?.type === 'delete_announcement' && msg.payload?.id) {
           setItems(prev => prev.filter(a => a.id !== msg.payload.id))
         }
-      } catch {}
+      },
+      () => console.log('Ticker WebSocket connected'),
+      () => console.log('Ticker WebSocket disconnected'),
+      () => console.log('Ticker WebSocket error')
+    )
+    wsRef.current = ws
+
+    return () => { 
+      mounted = false
+      try { 
+        ws.close() 
+      } catch {} 
     }
-    return () => { mounted = false; try { ws.close() } catch {} }
   }, [])
 
   const texts = useMemo(() => (items || []).map(a => (a.title ? `${a.title} — ${a.content || ''}` : (a.content || ''))).filter(Boolean), [items])

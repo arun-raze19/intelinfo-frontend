@@ -8,19 +8,23 @@ const getApiBase = () => {
   
   // Check for environment variable first (for build-time configuration)
   if (import.meta?.env?.VITE_API_BASE) {
+    console.log('Using VITE_API_BASE:', import.meta.env.VITE_API_BASE)
     return import.meta.env.VITE_API_BASE
   }
   
   // Check if we're running locally (development)
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    console.log('Development mode detected, using production API')
     return 'https://api.intelinfo.me'
   }
   
   // For production deployment, use the production API
+  console.log('Production mode detected, using production API')
   return 'https://api.intelinfo.me'
 }
 
 const API_BASE = getApiBase()
+console.log('API_BASE resolved to:', API_BASE)
 
 // Generic API request handler
 const apiRequest = async (endpoint, options = {}) => {
@@ -173,6 +177,7 @@ export const rag = {
 // WebSocket connection for real-time updates
 export const createWebSocket = (onMessage, onOpen, onClose, onError) => {
   const wsUrl = API_BASE.replace(/^https?/, API_BASE.startsWith('https') ? 'wss' : 'ws') + '/ws'
+  console.log('Creating WebSocket connection to:', wsUrl)
   const ws = new WebSocket(wsUrl)
   
   ws.onopen = onOpen
