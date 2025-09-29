@@ -28,13 +28,24 @@ const Announcements = () => {
   useEffect(() => { load() }, [load])
 
   const loadMessages = useCallback(async (token) => {
-    if (!token) return
+    if (!token) {
+      console.log('No token provided for messages loading')
+      return
+    }
     try {
+      console.log('Loading messages with token:', token.substring(0, 10) + '...')
       const data = await messages.list(token)
+      console.log('Messages loaded successfully:', data)
       setMessages(data)
     } catch (e) {
       console.error('Failed to load messages:', e)
-      alert('Failed to load inbox messages')
+      if (e.message.includes('401')) {
+        alert('Authentication failed. Please login again.')
+      } else if (e.message.includes('Network error')) {
+        alert('Network error. Please check your connection and try again.')
+      } else {
+        alert('Failed to load inbox messages: ' + e.message)
+      }
     }
   }, [])
 
