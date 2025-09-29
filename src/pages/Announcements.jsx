@@ -61,13 +61,22 @@ const Announcements = () => {
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
+      console.log('Attempting admin login...')
       const json = await auth.login(loginState.username, loginState.password)
+      console.log('Login successful, token received')
       setAdminToken(json.token)
       // Preload messages after login
       loadMessages(json.token)
+      alert('Login successful! You can now manage announcements.')
     } catch (error) {
       console.error('Login failed:', error)
-      alert('Invalid credentials')
+      if (error.message.includes('401')) {
+        alert('Invalid credentials. Please check your username and password.')
+      } else if (error.message.includes('Network error')) {
+        alert('Network error. Please check your internet connection and try again.')
+      } else {
+        alert('Login failed: ' + error.message)
+      }
     }
   }
 
