@@ -1,5 +1,26 @@
 // API service module for Intelinfo Backend
-const API_BASE = 'https://api.intelinfo.me'
+// Dynamic API base URL resolution for different environments
+const getApiBase = () => {
+  // Check if we're in a browser environment
+  if (typeof window === 'undefined') {
+    return 'https://api.intelinfo.me'
+  }
+  
+  // Check for environment variable first (for build-time configuration)
+  if (import.meta?.env?.VITE_API_BASE) {
+    return import.meta.env.VITE_API_BASE
+  }
+  
+  // Check if we're running locally (development)
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'https://api.intelinfo.me'
+  }
+  
+  // For production deployment, use the production API
+  return 'https://api.intelinfo.me'
+}
+
+const API_BASE = getApiBase()
 
 // Generic API request handler
 const apiRequest = async (endpoint, options = {}) => {
@@ -13,23 +34,37 @@ const apiRequest = async (endpoint, options = {}) => {
   
   const config = { ...defaultOptions, ...options }
   
+  // Add debugging information
+  console.log(`API Request: ${config.method || 'GET'} ${url}`)
+  
   try {
     const response = await fetch(url, config)
     
+    console.log(`API Response: ${response.status} ${response.statusText}`)
+    
     if (!response.ok) {
       const errorText = await response.text()
+      console.error(`API Error ${response.status}:`, errorText)
       throw new Error(`API Error ${response.status}: ${errorText}`)
     }
     
     // Handle different response types
     const contentType = response.headers.get('content-type')
     if (contentType && contentType.includes('application/json')) {
-      return await response.json()
+      const data = await response.json()
+      console.log('API Success:', data)
+      return data
     }
     
-    return await response.text()
+    const textData = await response.text()
+    console.log('API Success (text):', textData)
+    return textData
   } catch (error) {
     console.error('API Request failed:', error)
+    // Add more specific error information
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new Error(`Network error: Unable to connect to ${API_BASE}. Please check your internet connection and try again.`)
+    }
     throw error
   }
 }

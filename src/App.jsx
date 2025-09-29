@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import MobileNav from './components/MobileNav'
 import FloatingChatbot from './components/FloatingChatbot'
+import ApiTest from './components/ApiTest'
 import Home from './pages/Home'
 import Events from './pages/Events'
 import EventAnamoly from './pages/events/EventAnamoly'
@@ -46,6 +47,7 @@ function App() {
           <Route path="/announcements" element={<Announcements />} />
           <Route path="/food-court" element={<FoodCourt />} />
           <Route path="/admin" element={<Announcements />} />
+          <Route path="/api-test" element={<ApiTest />} />
         </Routes>
         <MobileNav />
         <FloatingChatbot />
