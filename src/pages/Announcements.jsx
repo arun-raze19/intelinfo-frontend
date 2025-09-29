@@ -11,6 +11,7 @@ const Announcements = () => {
 
   const [adminToken, setAdminToken] = useState('')
   const [loginState, setLoginState] = useState({ username: '', password: '' })
+  const [loadingMessages, setLoadingMessages] = useState(false)
 
   const [form, setForm] = useState({ kind: 'text', title: '', content: '' })
   const [file, setFile] = useState(null)
@@ -28,24 +29,44 @@ const Announcements = () => {
   useEffect(() => { load() }, [load])
 
   const loadMessages = useCallback(async (token) => {
+    console.log('loadMessages called with token:', token ? token.substring(0, 10) + '...' : 'null')
+    
     if (!token) {
       console.log('No token provided for messages loading')
+      alert('Please login first to view inbox messages.')
       return
     }
+    
+    setLoadingMessages(true)
     try {
       console.log('Loading messages with token:', token.substring(0, 10) + '...')
+      console.log('API URL will be:', `https://api.intelinfo.me/messages?token=${encodeURIComponent(token)}`)
+      
       const data = await messages.list(token)
       console.log('Messages loaded successfully:', data)
       setMessages(data)
+      
+      if (data.length === 0) {
+        console.log('No messages found in inbox')
+      }
     } catch (e) {
       console.error('Failed to load messages:', e)
-      if (e.message.includes('401')) {
-        alert('Authentication failed. Please login again.')
-      } else if (e.message.includes('Network error')) {
-        alert('Network error. Please check your connection and try again.')
+      console.error('Error details:', {
+        message: e.message,
+        name: e.name,
+        stack: e.stack
+      })
+      
+      if (e.message.includes('401') || e.message.includes('Unauthorized')) {
+        alert('Authentication failed. Your session may have expired. Please login again.')
+        setAdminToken('') // Clear the token
+      } else if (e.message.includes('Network error') || e.message.includes('fetch')) {
+        alert('Network error. Please check your internet connection and try again.')
       } else {
         alert('Failed to load inbox messages: ' + e.message)
       }
+    } finally {
+      setLoadingMessages(false)
     }
   }, [])
 
@@ -132,7 +153,17 @@ const Announcements = () => {
             <div className="glass-card" style={{ marginBottom: '1rem', display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
                 <button className={`glass-btn${view==='ann' ? ' primary' : ''}`} onClick={() => setView('ann')}>Announcements</button>
-                <button className={`glass-btn${view==='inbox' ? ' primary' : ''}`} onClick={() => { setView('inbox'); loadMessages(adminToken) }} style={{ marginLeft: 8 }}>Inbox</button>
+                <button className={`glass-btn${view==='inbox' ? ' primary' : ''}`} onClick={() => { 
+                  console.log('Inbox button clicked, current token:', adminToken ? adminToken.substring(0, 10) + '...' : 'null')
+                  setView('inbox')
+                  if (adminToken) {
+                    loadMessages(adminToken)
+                  } else {
+                    alert('Please login first to view inbox messages.')
+                  }
+                }} style={{ marginLeft: 8 }} disabled={loadingMessages}>
+                  {loadingMessages ? 'Loading...' : 'Inbox'}
+                </button>
               </div>
               {view === 'inbox' && adminToken && (
                 <a className="glass-btn-primary" href={`https://api.intelinfo.me/messages.csv?token=${encodeURIComponent(adminToken)}`}>Download CSV</a>
@@ -177,7 +208,9 @@ const Announcements = () => {
 
             {isAdminRoute && view === 'inbox' && (
               <div className="ann-list glass-card">
-                {!adminToken ? (
+                {loadingMessages ? (
+                  <p className="empty">Loading inbox messages...</p>
+                ) : !adminToken ? (
                   <p className="empty">Login to view inbox.</p>
                 ) : messages.length === 0 ? (
                   <p className="empty">No messages yet.</p>
