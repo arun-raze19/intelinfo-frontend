@@ -1,11 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import './FloatingChatbot.css'
-
-// Same base as other API consumers
-const API_BASE = (typeof window !== 'undefined') ? (
-  (import.meta?.env?.VITE_API_BASE) ||
-  `${window.location.protocol}//${window.location.hostname}:${import.meta?.env?.VITE_API_PORT || '8006'}`
-) : (import.meta?.env?.VITE_API_BASE || 'http://localhost:8006')
+import { rag } from '../utils/api'
 
 export default function FloatingChatbot() {
   const [open, setOpen] = useState(false)
@@ -62,11 +57,7 @@ export default function FloatingChatbot() {
       const text = collectText()
       if (!text) return
       try {
-        await fetch(`${API_BASE}/rag/ingest`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ texts: [text] })
-        })
+        await rag.ingest({ texts: [text] })
         try { localStorage.setItem('intelinfo_rag_ingested_v1', '1') } catch (_) {}
       } catch (_) {
         // ignore ingest errors; chat can still work without context
@@ -86,13 +77,7 @@ export default function FloatingChatbot() {
     setIsTyping(true)
     
     try {
-      const res = await fetch(`${API_BASE}/rag/chat`, {
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: q })
-      })
-      if (!res.ok) throw new Error(await res.text())
-      const json = await res.json()
+      const json = await rag.chat(q)
       
       // Simulate typing delay for better UX
       setTimeout(() => {
@@ -101,6 +86,7 @@ export default function FloatingChatbot() {
         setLoading(false)
       }, 500)
     } catch (e) {
+      console.error('Chat error:', e)
       setTimeout(() => {
         setHistory(h => [...h, { role: 'assistant', text: 'Sorry, I hit a snag. Please try again.' }])
         setIsTyping(false)

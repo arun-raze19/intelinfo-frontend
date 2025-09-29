@@ -1,11 +1,6 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import './Announcements.css'
-
-// Resolve backend base URL for all clients on the network
-const API_BASE = (typeof window !== 'undefined') ? (
-  (import.meta?.env?.VITE_API_BASE) ||
-  `${window.location.protocol}//${window.location.hostname}:${import.meta?.env?.VITE_API_PORT || '8006'}`
-) : (import.meta?.env?.VITE_API_BASE || 'http://localhost:8006')
+import { announcements, messages, auth, createWebSocket } from '../utils/api'
 
 const Announcements = () => {
   const [items, setItems] = useState([])
@@ -22,11 +17,10 @@ const Announcements = () => {
 
   const load = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/announcements`)
-      if (!res.ok) throw new Error('Failed to load')
-      const data = await res.json()
+      const data = await announcements.list()
       setItems(data)
     } catch (e) {
+      console.error('Failed to load announcements:', e)
       // ignore for now
     }
   }, [])
@@ -36,32 +30,29 @@ const Announcements = () => {
   const loadMessages = useCallback(async (token) => {
     if (!token) return
     try {
-      const res = await fetch(`${API_BASE}/messages?token=${encodeURIComponent(token)}`)
-      if (!res.ok) throw new Error('Failed to load messages')
-      const data = await res.json()
+      const data = await messages.list(token)
       setMessages(data)
     } catch (e) {
+      console.error('Failed to load messages:', e)
       alert('Failed to load inbox messages')
     }
   }, [])
 
   useEffect(() => {
-    const wsScheme = API_BASE.startsWith('https') ? 'wss' : 'ws'
-    const ws = new WebSocket(`${API_BASE.replace(/^https?/, wsScheme)}/ws`)
-    wsRef.current = ws
-    ws.onopen = () => setWsConnected(true)
-    ws.onclose = () => setWsConnected(false)
-    ws.onerror = () => setWsConnected(false)
-    ws.onmessage = (ev) => {
-      try {
-        const msg = JSON.parse(ev.data)
+    const ws = createWebSocket(
+      (msg) => {
         if (msg?.type === 'new_announcement' && msg.payload) {
           setItems(prev => [msg.payload, ...prev])
         } else if (msg?.type === 'delete_announcement' && msg.payload?.id) {
           setItems(prev => prev.filter(a => a.id !== msg.payload.id))
         }
-      } catch {}
-    }
+      },
+      () => setWsConnected(true),
+      () => setWsConnected(false),
+      () => setWsConnected(false)
+    )
+    wsRef.current = ws
+    
     return () => {
       ws.close()
     }
@@ -69,44 +60,42 @@ const Announcements = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    const body = new FormData()
-    body.append('username', loginState.username)
-    body.append('password', loginState.password)
-    const res = await fetch(`${API_BASE}/login`, { method: 'POST', body })
-    if (res.ok) {
-      const json = await res.json()
+    try {
+      const json = await auth.login(loginState.username, loginState.password)
       setAdminToken(json.token)
       // Preload messages after login
       loadMessages(json.token)
-    } else {
+    } catch (error) {
+      console.error('Login failed:', error)
       alert('Invalid credentials')
     }
   }
 
   const handleCreate = async (e) => {
     e.preventDefault()
-    const body = new FormData()
-    body.append('kind', form.kind)
-    if (form.title) body.append('title', form.title)
-    if (form.content) body.append('content', form.content)
-    if (adminToken) body.append('token', adminToken)
-    if (file) body.append('file', file)
-    const res = await fetch(`${API_BASE}/announcements`, { method: 'POST', body })
-    if (!res.ok) {
-      const txt = await res.text()
-      alert('Failed to post: ' + txt)
-    } else {
+    try {
+      await announcements.create({
+        kind: form.kind,
+        title: form.title,
+        content: form.content,
+        file: file
+      }, adminToken)
+      
       setForm({ kind: 'text', title: '', content: '' })
       setFile(null)
+    } catch (error) {
+      console.error('Failed to create announcement:', error)
+      alert('Failed to post: ' + error.message)
     }
   }
 
   const handleDelete = async (id) => {
     if (!adminToken) return alert('Login required')
-    const res = await fetch(`${API_BASE}/announcements/${id}?token=${encodeURIComponent(adminToken)}`, { method: 'DELETE' })
-    if (!res.ok) {
-      const txt = await res.text()
-      alert('Delete failed: ' + txt)
+    try {
+      await announcements.delete(id, adminToken)
+    } catch (error) {
+      console.error('Failed to delete announcement:', error)
+      alert('Delete failed: ' + error.message)
     }
   }
 
@@ -126,7 +115,7 @@ const Announcements = () => {
                 <button className={`glass-btn${view==='inbox' ? ' primary' : ''}`} onClick={() => { setView('inbox'); loadMessages(adminToken) }} style={{ marginLeft: 8 }}>Inbox</button>
               </div>
               {view === 'inbox' && adminToken && (
-                <a className="glass-btn-primary" href={`${API_BASE}/messages.csv?token=${encodeURIComponent(adminToken)}`}>Download CSV</a>
+                <a className="glass-btn-primary" href={`https://api.intelinfo.me/messages.csv?token=${encodeURIComponent(adminToken)}`}>Download CSV</a>
               )}
             </div>
           )}

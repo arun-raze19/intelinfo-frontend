@@ -150,3 +150,4 @@ For deployment issues:
 - Frontend accessible via Coolify URL
 - Food Court page loads correctly
 - All routes work with client-side navigation
+

@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react'
 import { Mail, Phone, MapPin, Send, Twitter, Linkedin, Instagram, Facebook, MessageCircle, Clock, Users, Award } from 'lucide-react'
 import './Connect.css'
+import { messages } from '../utils/api'
 
 const Connect = () => {
   const [formData, setFormData] = useState({
@@ -18,36 +19,23 @@ const Connect = () => {
     }))
   }, [])
 
-  // Resolve backend base URL (same as Announcements)
-  const API_BASE = (typeof window !== 'undefined') ? (
-    (import.meta?.env?.VITE_API_BASE) ||
-    `${window.location.protocol}//${window.location.hostname}:${import.meta?.env?.VITE_API_PORT || '8006'}`
-  ) : (import.meta?.env?.VITE_API_BASE || 'http://localhost:8006')
-
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
     try {
-      const res = await fetch(`${API_BASE}/messages`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contact_name: formData.contactName,
-          contact_email: formData.contactEmail,
-          subject: formData.subject,
-          message: formData.message,
-        })
+      await messages.create({
+        contactName: formData.contactName,
+        contactEmail: formData.contactEmail,
+        subject: formData.subject,
+        message: formData.message
       })
-      if (!res.ok) {
-        const txt = await res.text()
-        alert('Failed to send: ' + txt)
-        return
-      }
+      
       alert('Message sent successfully! We will get back to you within 24 hours.')
       setFormData({ contactName: '', contactEmail: '', subject: '', message: '' })
-    } catch (err) {
-      alert('Network error. Please try again later.')
+    } catch (error) {
+      console.error('Failed to send message:', error)
+      alert('Failed to send: ' + error.message)
     }
-  }, [API_BASE, formData])
+  }, [formData])
 
   const contactInfo = useMemo(() => [
     {
