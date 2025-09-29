@@ -167,7 +167,11 @@ export const rag = {
   },
   
   chat: async (query, groqKey = null) => {
-    const headers = {}
+    console.log('RAG chat request:', { query: query.substring(0, 100) + '...', hasGroqKey: !!groqKey })
+    
+    const headers = {
+      'Content-Type': 'application/json'
+    }
     if (groqKey) {
       headers['X-Groq-Key'] = groqKey
     }

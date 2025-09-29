@@ -9,6 +9,7 @@ import LoginTest from './components/LoginTest'
 import MessagesTest from './components/MessagesTest'
 import UserMessagesTest from './components/UserMessagesTest'
 import GetMessagesTest from './components/GetMessagesTest'
+import RagChatTest from './components/RagChatTest'
 import Home from './pages/Home'
 import Events from './pages/Events'
 import EventAnamoly from './pages/events/EventAnamoly'
@@ -60,6 +61,7 @@ function App() {
           <Route path="/messages-test" element={<MessagesTest />} />
           <Route path="/user-messages-test" element={<UserMessagesTest />} />
           <Route path="/get-messages-test" element={<GetMessagesTest />} />
+          <Route path="/rag-chat-test" element={<RagChatTest />} />
         </Routes>
         <MobileNav />
         <FloatingChatbot />
