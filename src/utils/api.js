@@ -1,9 +1,13 @@
 // API service module for Intelinfo Backend
 // Dynamic API base URL resolution for different environments
 const getApiBase = () => {
+  // ALWAYS use production API - no localhost or port configurations
+  const productionApi = 'https://api.intelinfo.me'
+  
   // Check if we're in a browser environment
   if (typeof window === 'undefined') {
-    return 'https://api.intelinfo.me'
+    console.log('Server-side: Using production API')
+    return productionApi
   }
   
   // Check for environment variable first (for build-time configuration)
@@ -12,19 +16,15 @@ const getApiBase = () => {
     return import.meta.env.VITE_API_BASE
   }
   
-  // Check if we're running locally (development)
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    console.log('Development mode detected, using production API')
-    return 'https://api.intelinfo.me'
-  }
-  
-  // For production deployment, use the production API
-  console.log('Production mode detected, using production API')
-  return 'https://api.intelinfo.me'
+  // FORCE production API for all environments
+  console.log('Forcing production API for all environments')
+  console.log('Current hostname:', window.location.hostname)
+  console.log('Current origin:', window.location.origin)
+  return productionApi
 }
 
 const API_BASE = getApiBase()
-console.log('API_BASE resolved to:', API_BASE)
+console.log('FINAL API_BASE resolved to:', API_BASE)
 
 // Generic API request handler
 const apiRequest = async (endpoint, options = {}) => {
