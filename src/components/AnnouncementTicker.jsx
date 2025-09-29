@@ -4,8 +4,8 @@ import './AnnouncementTicker.css'
 // Reuse API base resolution like Announcements
 const API_BASE = (typeof window !== 'undefined') ? (
   (import.meta?.env?.VITE_API_BASE) ||
-  `${window.location.protocol}//${window.location.hostname}:${import.meta?.env?.VITE_API_PORT || '8000'}`
-) : (import.meta?.env?.VITE_API_BASE || 'http://localhost:8000')
+  `${window.location.protocol}//${window.location.hostname}:${import.meta?.env?.VITE_API_PORT || '8006'}`
+) : (import.meta?.env?.VITE_API_BASE || 'http://localhost:8006')
 
 export default function AnnouncementTicker() {
   const [items, setItems] = useState([])
