@@ -295,7 +295,7 @@ const RagChatTest = () => {
         <ul>
           <li><strong>Endpoint:</strong> <code>POST https://api.intelinfo.me/rag/chat</code></li>
           <li><strong>Method:</strong> POST</li>
-          <li><strong>Body:</strong> <code>{"query": "your question"}</code></li>
+            <li><strong>Body:</strong> <code>{"{\"query\": \"your question\"}"}</code></li>
           <li><strong>Headers:</strong> Content-Type: application/json</li>
           <li><strong>Optional:</strong> X-Groq-Key header for enhanced responses</li>
           <li><strong>Response:</strong> JSON with answer field</li>
