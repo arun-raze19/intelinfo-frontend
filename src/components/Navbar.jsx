@@ -47,7 +47,7 @@ const Navbar = () => {
     <nav className="navbar glass">
       <div className="nav-container">
         <Link to="/" className="nav-logo" onClick={() => setIsMenuOpen(false)}>
-          <h2>INTELINFO 2k25</h2>
+          <h2>AIDS 2k25</h2>
         </Link>
 
         <ul
